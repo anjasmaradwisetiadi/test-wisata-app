@@ -5,38 +5,29 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect:'/dashboard'
+      redirect:'/activity'
+    },
+    // {
+    //   path: '/dashboard',
+    //   name: 'dashboard',
+    //   component: () => import('../views/dashboard/Dashboard.vue')
+    // },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/auth/Login.vue')
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: () => import('../views/dashboard/Dashboard.vue')
+      path: '/activity',
+      name: 'activity',
+      component: () => import('../views/activity/Activity.vue')
     },
     {
-      path: '/notification',
-      name: 'notification',
-      component: () => import('../views/notification/Notification.vue')
+      path: '/activity/detail/:id',
+      name: 'activity-detail',
+      component: () => import('../views/DetailActivity/DetailActivity.vue')
     },
-    {
-      path: '/attendance',
-      name: 'attendance',
-      component: () => import('../views/another_page/AnotherPage.vue')
-    },
-    {
-      path: '/form',
-      name: 'form',
-      component: () => import('../views/another_page/AnotherPage.vue')
-    },
-    {
-      path: '/setting',
-      name: 'setting',
-      component: () => import('../views/another_page/AnotherPage.vue')
-    },
-    {
-      path: '/checkout',
-      name: 'checkout',
-      component: () => import('../views/another_page/AnotherPage.vue')
-    },
+
     { path: '/:pathMatch(.*)*', component: () => import('../components/PageNotFound.vue'), meta: {requiresAuth: true} },
   ]
 })

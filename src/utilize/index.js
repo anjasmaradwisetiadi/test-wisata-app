@@ -8,9 +8,8 @@ export const utilize = {
         return word
     },
 
-    convertTimeDate(data){
-        if(dayjs(data).isValid()){
-            const date = data.toString().length === 10 ? data * 1000 : data;
+    convertTimeDate(date){
+        if(dayjs(date)){
             return dayjs(date).format('DD MMMM YYYY');
         }
         return '';
@@ -18,7 +17,6 @@ export const utilize = {
 
     convertTimeHours(data){
         if(dayjs(data).isValid()){
-            const date = data.toString().length === 10 ? data * 1000 : data;
             return dayjs(date).format('HH:mm');
         }
         return '--:--';

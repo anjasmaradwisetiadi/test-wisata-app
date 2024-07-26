@@ -5,7 +5,9 @@
       class="flex flex-col justify-center"
     >
       <Navbar></Navbar>
-      <RouterView />
+      <section class="bg-gray-50 dark:bg-gray-900">
+        <RouterView />
+      </section>
       <!-- <template v-if="nameRoutePath !== 'notification'">
         <NavbarBottom></NavbarBottom>
       </template> -->
