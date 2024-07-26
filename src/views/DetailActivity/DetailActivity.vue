@@ -35,15 +35,35 @@
                         </span>
                     </template>
                     <template v-if="isActivityEdit">
-                        <div class="ml-3">
-                            <button id="modal-close" class="py-2 px-6 bg-sky-400 rounded-lg text-white"
-                                @click="onSubmitActivity()"
-                            > Submit </button>
-                        </div>
-                    </template>
+                        <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
+                            @click="onSubmitActivity()"
+                        >
+                            done
+                        </span>
+                </template>
                 </div>
                 <div class="flex flex-row sm:justify-between sm:pt-3 w-full lg:w-auto">
                     <!--********** modal created -->
+                    <div class="flex">
+                        <button
+                            class="flex justify-center h-14 w-14 py-4 px-3 rounded-full items-center bg-white border border-gray-400 mr-4"
+                            @click="isDraggble = !isDraggble"
+                            @blur="isDraggble = false"
+                        >
+                            <template v-if="!isDraggble">
+                                <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined cursor-pointer" 
+                                >
+                                    unfold_more
+                                </span>
+                            </template>
+                            <template v-if="isDraggble">
+                                <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined  cursor-pointer" 
+                                >
+                                    done
+                                </span>
+                            </template>
+                        </button>
+                    </div>
                     <div class="relative text-lg w-80 mr-3 w-full">
                         <div class="flex w-full  lg:justify-end justify-start">
                             <button
@@ -138,7 +158,7 @@
                                 >
                                     <div class="flex justify-center items-center">
                                         <div class="w-3/12 px-3 flex justify-center items-center">
-                                            <ZToA></ZToA>
+                                            <ZtoA></ZtoA>
                                         </div>
                                         <div class="w-6/12">
                                             Z To A
@@ -192,8 +212,18 @@
                     </div>
                 </div>
             </div>
+            <ListDetailActivity></ListDetailActivity>
         </div>
+        
     </div>
+    <CreateSubActivityModal
+        :isOpenModal="isOpenModalGlobal"
+        :nameModal="nameModal" 
+        @isOpenModelCloseGeneral="isOpenModelCloseServer"
+        :responseModal="responseModalGlobal" 
+        :loading="loading"
+    >
+    </CreateSubActivityModal>
 </template>
 
 <script setup>
@@ -204,11 +234,26 @@ import ZtoA from '@/assets/svg/ZtoA.vue';
 import Newest from '@/assets/svg/Newest.vue';
 import Oldest from '@/assets/svg/Oldest.vue';
 import NotDone from '@/assets/svg/NotDone.vue';
+import ListDetailActivity from '@/views/DetailActivity/ListDetailActivity.vue'
+import CreateSubActivityModal from '@/components/CreateSubActivityModal.vue';
 
 const selectOption = ref('')
 const isOptionsExpanded = ref(false)
 const isActivityEdit = ref(false);
 const activityName = ref('New Create Activity')
+const isDraggble = ref(false)
+
+//********** */ trigger modal activity 
+
+const dataSubMenuActivity = ref([])
+const loading = ref(false)
+const nameModal = ref('create_form')
+const responseModalGlobal = ref(null)
+const isOpenModalGlobal = ref(false)
+
+onMounted(()=>{
+
+})
 
 const editActivity = () => {
     isActivityEdit.value = true
@@ -225,7 +270,24 @@ const setOption = (option) => {
 }
 
 const onCreateSubActivity = () => {
+    // ***** call modal need parse from store pinia
     console.log("onCreateSubActivity")
+    isOpenModalGlobal.value = true;
+    loading.value = false;
+    nameModal.value ='create_form'
+    responseModalGlobal.value = {
+        title: 'Delete Data',
+        message: 'Are you sure want delete this data ?'
+    }
+}
+
+const isOpenModelCloseServer = (event) =>{
+    // ***** call modal need parse from store pinia
+    isOpenModalGlobal.value = false;
+    loading.value = false;
+    nameModal.value = ''
+    responseModalGlobal.value = null
+    
 }
 
 const onBack = () => {

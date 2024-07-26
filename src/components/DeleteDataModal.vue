@@ -79,7 +79,6 @@ const emit = defineEmits([
         ]);
 
         function onToggle(data) {
-            props.isOpenModal = !props.isOpenModal;
             const payload = {
                 name: props.nameModal,
                 value: data
