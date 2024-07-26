@@ -5,18 +5,42 @@
     >
         <div class="relative overflow-y-auto overflow-x-hidden z-1 container">
             <div class="flex flex-row flex-wrap fixed justify-between px-4 container bg-gray-50 dark:bg-gray-900 mt-24 lg:mt-24 py-3 lg:pt-10 ">
-                <div class="flex mb-4 lg:mb-0">
+                <div class="flex items-center mb-4 lg:mb-0">
                     <span class="lg:text-3xl md:text-3xl text-xl cursor-pointer material-icons-outlined pr-3"
                         @click="onBack()"
                     >
                         arrow_back_ios
                     </span>
-                    <h1 class="lg:text-3xl md:text-3xl text-xl cursor-pointer">New Create Activity</h1>
-                    <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
-                        @click="editActivity()"
-                    >
-                        edit
-                    </span>
+                    <template v-if="!isActivityEdit">
+                        <h1 class="lg:text-3xl md:text-3xl text-xl cursor-pointer"> {{activityName}}</h1>
+                    </template>
+                    <template v-if="isActivityEdit">
+                        <div >   
+                            <input
+                                v-model="activityName"
+                                id="name"
+                                name="name"
+                                type="text"
+                                required
+                                class="block w-full rounded-md border border-gray-400 py-2 text-gray-900 ring-0 focus:ring-0 placeholder:text-gray-400 sm:text-sm sm:leading-6 pl-[8px]"
+                                placeholder="Schedule Name"
+                                />
+                        </div>
+                    </template>
+                    <template v-if="!isActivityEdit">
+                        <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
+                            @click="editActivity()"
+                        >
+                            edit
+                        </span>
+                    </template>
+                    <template v-if="isActivityEdit">
+                        <div class="ml-3">
+                            <button id="modal-close" class="py-2 px-6 bg-sky-400 rounded-lg text-white"
+                                @click="onSubmitActivity()"
+                            > Submit </button>
+                        </div>
+                    </template>
                 </div>
                 <div class="flex flex-row sm:justify-between sm:pt-3 w-full lg:w-auto">
                     <!--********** modal created -->
@@ -175,18 +199,24 @@
 <script setup>
 import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
 import FilterIcon from '@/assets/svg/FilterIcon.vue'
-import AToZ from '@/assets/svg/AToZ.vue'
-import ZToA from '@/assets/svg/ZToA.vue'
-import Newest from '@/assets/svg/Newest.vue'
-import Oldest from '@/assets/svg/Oldest.vue'
-import NotDone from '@/assets/svg/NotDone.vue'
+import AToZ from '@/assets/svg/AToZ.vue';
+import ZtoA from '@/assets/svg/ZtoA.vue';
+import Newest from '@/assets/svg/Newest.vue';
+import Oldest from '@/assets/svg/Oldest.vue';
+import NotDone from '@/assets/svg/NotDone.vue';
 
-const options = ref(["1x", "2x", "3x", "4x or more"])
-const selectOption = ref('1x')
+const selectOption = ref('')
 const isOptionsExpanded = ref(false)
+const isActivityEdit = ref(false);
+const activityName = ref('New Create Activity')
 
 const editActivity = () => {
-    console.log("editActivity")
+    isActivityEdit.value = true
+}
+
+const onSubmitActivity = () =>{
+    isActivityEdit.value = false
+    console.log("submit activity")
 }
 
 const setOption = (option) => {

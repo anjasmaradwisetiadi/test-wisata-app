@@ -35,7 +35,6 @@
             </template>
         </div>
     </transition>
-
 </template>
 
 <script setup>
