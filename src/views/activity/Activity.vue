@@ -4,13 +4,15 @@
         <div class="relative overflow-y-auto overflow-x-hidden z-1 container">
             <div class="flex flex-row fixed justify-between px-4 container bg-gray-50 dark:bg-gray-900 mt-24 lg:mt-24 py-3 lg:pt-10 ">
                 <div>
-                    <h1 class="lg:text-3xl md:text-3xl text-xl sm: font-bold">ACTIVITY</h1>
+                    <h1 class="lg:text-3xl md:text-3xl text-xl font-bold">ACTIVITY</h1>
                 </div>
-                <div class="flex justify-center align-center md:px-6 lg:px-6 px-4 py-2 rounded-full bg-sky-400 hover:bg-sky-600 text-sm text-white cursor-pointer">
+                <div class="flex justify-center align-center md:px-6 lg:px-6 px-4 py-2 rounded-full bg-sky-400 hover:bg-sky-600 text-sm text-white cursor-pointer"
+                    @click="onCreateActivity()"
+                >
                     <span class="material-icons-outlined md:text-2xl lg:text-2xl text-lg">
                         add
                     </span>
-                    <h1 class="md:text-2xl lg:text-2xl text-lg ">&nbsp;Tambah</h1>
+                    <h1 class="md:text-2xl lg:text-2xl text-lg">&nbsp;Tambah</h1>
                 </div>
             </div>
             <div class="flex flex-row flex-wrap justify-center mt-24 lg:mt-28 pt-20 lg:pt-24">
@@ -93,6 +95,10 @@ const onDelete = () => {
         title: 'Delete Data',
         message: 'Are you sure want delete this data ?'
     }
+}
+
+const onCreateActivity = () => {
+    console.log("create activity = ")
 }
 
 const onDetail = (data) =>{
