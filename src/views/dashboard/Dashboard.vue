@@ -19,10 +19,6 @@ import Loading from '../../components/Loading.vue'
 
 const dashboardStore = useDashboardStore();
 
-onMounted(()=>{
-    dashboardStore.simulateLoading()
-})
-
 
 </script>
 

@@ -75,6 +75,13 @@ const isConfirmModal = ref(false);
 const responseModalGlobal = ref(null);
 const isConfirmModalGlobal = ref(false);
 
+const apiKey = import.meta.env.VITE_API_URL;
+// const apiKey = process.env.APP_URL;
+
+onMounted(()=>{
+    console.log('env = ')
+    console.log(apiKey)
+})
 
 function convertDate(data){
     return utilize.convertTimeDate(data);

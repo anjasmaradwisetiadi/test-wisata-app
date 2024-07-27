@@ -12,7 +12,7 @@ export default defineConfig({
     // VueDevTools(),
   ],
   define:{
-    'process.env.APP_URL': JSON.stringify(process.env.APP_URL)
+    'process.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL)
   },
   resolve: {
     alias: {
