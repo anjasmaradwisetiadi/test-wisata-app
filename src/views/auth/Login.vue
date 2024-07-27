@@ -75,7 +75,7 @@ const getLoading = computed(()=>{
 })
 
 watch(getLoginResponse, (newValue, oldValue)=>{
-    if(newValue && newValue?.message === 'Success'){
+    if( newValue?.status === 200 && newValue?.data.message === 'Success'){
         Swal.fire({
             title: "Success Login",
             text: "You will redirect to dashboard",
@@ -84,11 +84,18 @@ watch(getLoginResponse, (newValue, oldValue)=>{
             confirmButtonText: "Yes",
         }).then((result)=>{
             if (result.isConfirmed || result.isDismissed) {
+                authStore.loginResponse = null
+                authStore.loading = false;
+                
                 router.push('/activity')
             }
         })
+    } else if(newValue?.status === 400) {
+        authStore.loginResponse = null
+        authStore.loading = false;
+        errorHandle.errorMessage(newValue?.data?.message)
     } else {
-        errorHandle.errorMessage(newValue.data.message)
+        return
     }
 })
 
