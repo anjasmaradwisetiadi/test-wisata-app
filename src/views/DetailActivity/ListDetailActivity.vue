@@ -13,7 +13,15 @@
                     class="flex w-full shadow-lg px-3 py-6 mt-2 border border border-solid border-gray-200"
                 >
                     <div class="w-14 flex justify-center items-center align-center mr-1">
-                        <input @change="onUpdateSubActivity(item.id)" id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <template v-if="isDraggble">
+                            <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined cursor-pointer" 
+                            >
+                                unfold_more
+                            </span>
+                        </template>
+                        <template v-if="!isDraggble">
+                            <input @change="onUpdateSubActivity(item.id)" id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        </template>
                     </div>
                     <div class="w-full flex items-center mr-1.5 overflow-text">
                         <div class="flex w-8 items-center mr-0.5">
@@ -39,24 +47,37 @@
                             </template>
                         </div>
                         <div class="flex w-full text-xl overflow-text">
-                            {{item?.title}}
+                            <template v-if="item.is_active">
+                                <span>
+                                    {{item?.title}}
+                                </span>
+                            </template>
+                            <template v-if="!item.is_active">
+                                <span class="text-gray-400 line-through">
+                                    {{item?.title}}
+                                </span>
+                            </template>
                         </div>
-                        <div class="w-12 flex items-center mx-1.5">
-                            <span class="material-icons-outlined text-gray-500 cursor-pointer text-2xl" style="line-height: 1rem;"
-                                @click="onEditSubActivity(item?.id)"
+                        <template v-if="!isDraggble">
+                            <div class="w-12 flex items-center mx-1.5">
+                                <span class="material-icons-outlined text-gray-500 cursor-pointer text-2xl" style="line-height: 1rem;"
+                                        @click="onEditSubActivity(item?.id)"
+                                    >
+                                        edit
+                                </span>
+                            </div>
+                        </template>
+                    </div>
+                    <template v-if="!isDraggble">
+                        <div class="w-12 flex items-center align-center">
+                            <span 
+                                class="material-icons-outlined text-gray-500 cursor-pointer text-3xl" style="line-height: 1rem;" 
+                                @click="onDeleteSubActivity(item?.id)"
                             >
-                                edit
-                        </span>
-                    </div>
-                    </div>
-                    <div class="w-12 flex items-center align-center">
-                        <span 
-                            class="material-icons-outlined text-gray-500 cursor-pointer text-3xl" style="line-height: 1rem;" 
-                            @click="onDeleteSubActivity(item?.id)"
-                        >
-                            delete
-                        </span>
-                    </div>
+                                delete
+                            </span>
+                        </div>
+                    </template>
                 </div>
             </div>
         </template>
@@ -68,11 +89,19 @@ import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
 import { activity_detail_dummy_data } from '@/utilize/DataDummy';
 import '@/css/bullet-priority.css'
 
+const props = defineProps({
+    isDraggble: {
+        type: Boolean,
+        default: false
+    }
+})
+
 const dataSubMenuActivity = ref(activity_detail_dummy_data.data)
 const loading = ref(false)
 const nameModal = ref('create_form')
 const responseModalGlobal = ref(null)
 const isOpenModalGlobal = ref(false)
+
 
 const onCreateSubActivity = () =>{
     // ***** call modal need parse from store pinia

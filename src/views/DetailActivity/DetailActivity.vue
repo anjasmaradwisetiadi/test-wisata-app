@@ -43,8 +43,8 @@
                 </template>
                 </div>
                 <div class="flex flex-row sm:justify-between sm:pt-3 w-full lg:w-auto">
-                    <!--********** modal created -->
                     <div class="flex">
+                        <!--********** draggable mode -->
                         <button
                             class="flex justify-center h-14 w-14 py-4 px-3 rounded-full items-center bg-white border border-gray-400 mr-4"
                             @click="isDraggble = !isDraggble"
@@ -64,6 +64,7 @@
                             </template>
                         </button>
                     </div>
+                    <!--********** filter task choice -->
                     <div class="relative text-lg w-80 mr-3 w-full">
                         <div class="flex w-full  lg:justify-end justify-start">
                             <button
@@ -213,7 +214,9 @@
                 </div>
             </div>
             <!--********* table detail activity  -->
-            <ListDetailActivity></ListDetailActivity>
+            <ListDetailActivity
+                :isDraggble = "isDraggble"
+            ></ListDetailActivity>
         </div>
         
     </div>
@@ -229,6 +232,7 @@
 
 <script setup>
 import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
+import { useRouter } from 'vue-router';
 import FilterIcon from '@/assets/svg/FilterIcon.vue'
 import AToZ from '@/assets/svg/AToZ.vue';
 import ZtoA from '@/assets/svg/ZtoA.vue';
@@ -237,6 +241,8 @@ import Oldest from '@/assets/svg/Oldest.vue';
 import NotDone from '@/assets/svg/NotDone.vue';
 import ListDetailActivity from '@/views/DetailActivity/ListDetailActivity.vue'
 import CreateSubActivityModal from '@/views/DetailActivity/CreateSubActivityModal.vue';
+
+const router = useRouter();
 
 const selectOption = ref('')
 const isOptionsExpanded = ref(false)
@@ -292,7 +298,8 @@ const isOpenModelCloseServer = (event) =>{
 }
 
 const onBack = () => {
-    console.log("back activity")
+    router.push(`/`)
+
 }
 </script>
 

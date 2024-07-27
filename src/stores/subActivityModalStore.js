@@ -5,11 +5,18 @@ export const useSubActivityModalStore = defineStore('subActivityModal', {
   state : () =>{
     return {
         loading: false,
+        isOpenModalGlobal: false,
+        nameModal: '',
+        responseModalGlobal: {
+            title: 'Delete Data',
+            message: 'Are you sure want delete this data ?'
+        } 
+
     }
   },
 
   actions:{
-    async taskList() {
+    async triggerSubActivityModal() {
         await instanceAxios.get('tasks')
             .then((response)=>{
                 console.log("response = ")
