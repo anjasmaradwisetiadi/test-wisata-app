@@ -14,7 +14,16 @@ export const successHandle = {
           title: "Success",
           text: textPrint,
           icon: "success",
-          confirmButtonColor:"#1874e7",
+          confirmButtonColor:"#38bdf8",
         })
-      },
+    },
+
+    successMessage(text = ''){
+        Swal.fire({
+            title: "Success",
+            text: text,
+            icon: "success",
+            confirmButtonColor:"#38bdf8",
+        })
+    }
 }

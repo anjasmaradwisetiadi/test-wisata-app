@@ -5,3 +5,11 @@
 body{
     font-family: "Rubik", sans-serif;
 }
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: .25rem;
+    font-size: .9rem;
+    color: #dc3545;
+}

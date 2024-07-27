@@ -8,6 +8,7 @@ export const errorHandle = {
       title: "Something Wrong",
       text: text,
       icon: "error",
+      confirmButtonColor: '#38bdf8'
     })
   },
 
@@ -16,6 +17,7 @@ export const errorHandle = {
       title: "Warning",
       text: text,
       icon: "warning",
+      confirmButtonColor: '#38bdf8'
     })
   },
 

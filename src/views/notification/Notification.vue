@@ -73,7 +73,7 @@ import {useNotificationStore} from '../../stores/notification';
 import {useDashboardStore} from '../../stores/dashboard';
 import {utilize} from '../../utilize/index'
 import {collectUrl} from '../../utilize/collectUrl'
-import Loading from '../../components/Loading.vue'
+import Loading from '../../components/LoadingAndAlert.vue'
 import dayjs from "dayjs";
 
 const notificationStore = useNotificationStore();

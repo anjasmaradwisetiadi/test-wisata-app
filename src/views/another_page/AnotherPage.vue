@@ -12,7 +12,7 @@
 
 <script setup>
 import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
-import Loading from '../../components/Loading.vue'
+import Loading from '../../components/LoadingAndAlert.vue'
 import {useDashboardStore} from '../../stores/dashboard';
 import { useRouter } from 'vue-router';
 
