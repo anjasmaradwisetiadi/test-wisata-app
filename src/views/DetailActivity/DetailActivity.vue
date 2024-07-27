@@ -212,6 +212,7 @@
                     </div>
                 </div>
             </div>
+            <!--********* table detail activity  -->
             <ListDetailActivity></ListDetailActivity>
         </div>
         
@@ -235,7 +236,7 @@ import Newest from '@/assets/svg/Newest.vue';
 import Oldest from '@/assets/svg/Oldest.vue';
 import NotDone from '@/assets/svg/NotDone.vue';
 import ListDetailActivity from '@/views/DetailActivity/ListDetailActivity.vue'
-import CreateSubActivityModal from '@/components/CreateSubActivityModal.vue';
+import CreateSubActivityModal from '@/views/DetailActivity/CreateSubActivityModal.vue';
 
 const selectOption = ref('')
 const isOptionsExpanded = ref(false)

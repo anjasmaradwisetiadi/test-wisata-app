@@ -6,28 +6,69 @@
                 class="w-[92vw-10rem] cursor-pointer" src="@/assets/image/todo-empty-state.png" alt="image">
         </template>
         <template v-if="dataSubMenuActivity?.length">
-            <div>
-                ada data
+            <div class="flex flex-col w-full">
+                <div
+                    v-for="(item, index) in dataSubMenuActivity"
+                    :key="index"
+                    class="flex w-full shadow-lg px-3 py-6 mt-2 border border border-solid border-gray-200"
+                >
+                    <div class="w-14 flex justify-center items-center align-center mr-1">
+                        <input @change="onUpdateSubActivity(item.id)" id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    </div>
+                    <div class="w-full flex items-center mr-1.5 overflow-text">
+                        <div class="flex w-8 items-center mr-0.5">
+                            <template v-if="item.priority === 1">
+                                <span class="bullet-make bullet-color-red">
+                                </span>
+                            </template>
+                            <template v-if="item.priority === 2">
+                                <span class="bullet-make bullet-color-yellow">
+                                </span>
+                            </template>
+                            <template v-if="item.priority === 3">
+                                <span class="bullet-make bullet-color-green">
+                                </span>
+                            </template>
+                            <template v-if="item.priority === 4">
+                                <span class="bullet-make bullet-color-blue">
+                                </span>
+                            </template>
+                            <template v-if="item.priority === 5">
+                                <span class="bullet-make bullet-color-purple">
+                                </span>
+                            </template>
+                        </div>
+                        <div class="flex w-full text-xl overflow-text">
+                            {{item?.title}}
+                        </div>
+                        <div class="w-12 flex items-center mx-1.5">
+                            <span class="material-icons-outlined text-gray-500 cursor-pointer text-2xl" style="line-height: 1rem;"
+                                @click="onEditSubActivity(item?.id)"
+                            >
+                                edit
+                        </span>
+                    </div>
+                    </div>
+                    <div class="w-12 flex items-center align-center">
+                        <span 
+                            class="material-icons-outlined text-gray-500 cursor-pointer text-3xl" style="line-height: 1rem;" 
+                            @click="onDeleteSubActivity(item?.id)"
+                        >
+                            delete
+                        </span>
+                    </div>
+                </div>
             </div>
         </template>
     </div>
-    <!-- <CreateSubActivityModal
-        :isOpenModal="isOpenModalGlobal"
-        :nameModal="nameModal" 
-        @isOpenModelCloseGeneral="isOpenModelCloseServer"
-        :responseModal="responseModalGlobal" 
-        :loading="loading"
-    >
-
-    </CreateSubActivityModal> -->
 </template>
 
 <script setup>
 import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
 import { activity_detail_dummy_data } from '@/utilize/DataDummy';
-import CreateSubActivityModal from '@/components/CreateSubActivityModal.vue';
+import '@/css/bullet-priority.css'
 
-const dataSubMenuActivity = ref([])
+const dataSubMenuActivity = ref(activity_detail_dummy_data.data)
 const loading = ref(false)
 const nameModal = ref('create_form')
 const responseModalGlobal = ref(null)
@@ -52,8 +93,25 @@ const isOpenModelCloseServer = (event) =>{
     responseModalGlobal.value = null
     
 }
+
+const onEditSubActivity = (id) => {
+    console.log("id edit sub acitivity = ")
+    console.log(id)
+}
+
+const onUpdateSubActivity = () =>{
+    console.log("finsih onUpdateSubActivity")
+}
+
+const onDeleteSubActivity = () =>{
+    console.log("finsih onDeleteSubActivity")
+}
 </script>
 
 <style scoped>
-
+    .overflow-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>

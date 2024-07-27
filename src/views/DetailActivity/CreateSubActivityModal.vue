@@ -190,6 +190,7 @@
 
 <script setup>
 import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
+import '@/css/bullet-priority.css'
 
 const nameSubActivity = ref('');
 const isOptionsExpanded = ref(false);
@@ -263,39 +264,9 @@ function setOption(option) {
 </script>
 
 <style scoped>
+
 .blur-background{
     background-color: rgba(255,255,255, 0.8);
 }
 
-/********** make view color bullet priority */
-.bullet-make {
-    display: inline-block;
-    content: "&#8226";
-    position: relative;
-    border-radius: 50%;
-    width: 14px;
-    height: 14px;
-    margin-right: 1rem;
-}
-
-
-.bullet-color-red {
-    background-color: #ed4c5c;
-}
-
-.bullet-color-yellow {
-    background-color: #f8a541;
-}
-
-.bullet-color-green {
-    background-color: #00a790;
-}
-
-.bullet-color-blue {
-    background-color: #428bc1;
-}
-
-.bullet-color-purple {
-    background-color: #8942c1;
-}
 </style>

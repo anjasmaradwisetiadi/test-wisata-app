@@ -17,7 +17,7 @@ export const useActivitiesStore = defineStore('activities', {
     async activitiesList() {
         await instanceAxios.get('activities')
             .then((response)=>{
-                console.log("response = ")
+                console.log("response = ") 
                 console.log(response)
             })
             .catch((error)=>{

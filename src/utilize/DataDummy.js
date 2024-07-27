@@ -51,21 +51,21 @@ export const activity_detail_dummy_data = {
         "title": "pinjam data",
         "activity_group_id": 227879,
         "is_active": 1,
-        "priority": "very-high"
+        "priority": 1
       },
       {
         "id": 419172,
-        "title": "tester data",
+        "title": "tester data aidyhadgsuig afhdauighsuiasguid auifyhasuisdtyasu",
         "activity_group_id": 227879,
         "is_active": 1,
-        "priority": "high"
+        "priority": 2
       },
       {
         "id": 419169,
         "title": "testing flow",
         "activity_group_id": 227879,
         "is_active": 1,
-        "priority": "very-high"
+        "priority": 1
       }
     ]
   }
