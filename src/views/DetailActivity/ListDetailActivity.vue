@@ -5,7 +5,7 @@
                 @click="onCreateSubActivity()"
                 class="w-[92vw-10rem] cursor-pointer" src="@/assets/image/todo-empty-state.png" alt="image">
         </template>
-        <template v-if="!getLoading && getSubActivitiess?.data?.length">
+        <template v-if="!getLoading && getSubActivities?.data?.length">
             <div class="flex flex-col w-full">
                 <div
                     v-for="(item, index) in getSubActivities?.data"
@@ -85,16 +85,19 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
+import { ref, reactive, watch, watchEffect, computed, onMounted, onBeforeMount } from 'vue';
 import { useSubActivitiesStore } from '@/stores/subActivityStore';
 import { useActivitiesStore } from '@/stores/activitiesStore';
 import { useRouter } from 'vue-router';
 import { activity_detail_dummy_data } from '@/utilize/DataDummy';
+import { useFormDataModalStore } from '@/stores/formDataModalStore';
+
 import '@/css/bullet-priority.css'
 
 const router = useRouter();
 const activitiesStore = useActivitiesStore()
 const subActivitiesStore = useSubActivitiesStore()
+const formDataModalStore = useFormDataModalStore()
 
 const page = ref(0);
 const limit = ref(0);
@@ -111,6 +114,24 @@ const getLoading = computed(()=>{
     return activitiesStore.loading;
 })
 
+//********** */ form modal data trigger response 
+const getIsOpenModalGlobal = computed(()=>{
+    return formDataModalStore.isOpenModalGlobal
+})
+const getNameModal = computed(()=>{
+    return formDataModalStore.nameModal
+})
+const getResponseModalGlobal = computed(()=>{
+    return formDataModalStore.responseModalGlobal
+})
+
+watchEffect(() => 
+    getIsOpenModalGlobal, 
+    getNameModal, 
+    getResponseModalGlobal, 
+{ immediate: true })
+
+// ********** sub activity modal
 const getSubActivities = computed(()=>{
     return subActivitiesStore.subActivities;
 })
@@ -147,22 +168,24 @@ const isOpenModalGlobal = ref(false)
 
 const onCreateSubActivity = () =>{
     // ***** call modal need parse from store pinia
-    isOpenModalGlobal.value = true;
-    loading.value = false;
-    nameModal.value ='create_form'
-    responseModalGlobal.value = {
+    const isOpenModalGlobal = true;
+    const nameModal ='create_form';
+    const responseModalGlobal = {
         title: 'Delete Data',
         message: 'Are you sure want delete this data ?'
     }
+
+    const payload = {
+        'isOpenModalGlobal': isOpenModalGlobal,
+        'nameModal': nameModal,
+        'responseModalGlobal': responseModalGlobal
+    }
+
+    formDataModalStore.onActivatedModal(payload)
 }
 
 const isOpenModelCloseServer = (event) =>{
-    // ***** call modal need parse from store pinia
-    isOpenModalGlobal.value = false;
-    loading.value = false;
-    nameModal.value = ''
-    responseModalGlobal.value = null
-    
+    formDataModalStore.onDeactivatedModal()
 }
 
 const onEditSubActivity = (id) => {

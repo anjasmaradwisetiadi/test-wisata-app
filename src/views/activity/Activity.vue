@@ -135,7 +135,7 @@ function isOpenModelCloseServer (event) {
 
 const onDelete = (data) => {
     Swal.fire({
-        icon: "waring",
+        icon: "warning",
         text: `Are you sure want delete this activity ${data.title}?`,
         title: "Delete Activity",
         showCancelButton: true,
@@ -151,21 +151,23 @@ const onDelete = (data) => {
 
 const onCreateActivity = () => {
     const payload = {
-        title: 'New Task'
+        title: 'New Task',
+        type: 'activity_task'
     }
     activitiesStore.activitiesCreate(payload)
 }
 
 const onDetail = (data) =>{
-    router.push(`activity/detail/${data?.id}`)
+    // router.push(`activity/detail/${data?.id}`)
     
     //********** */  it neeed BE fixing update data
-    // if(data?.type === "activity_task"){
-    //     router.push(`activity/detail/${data?.id}`)
-    // } else {
-    //     console.log("lainnya text")
-    //     // router.push(`activity/detail/${data}`)
-    // }
+    if(data?.type === "activity_task"){
+        router.push(`activity/detail/${data?.id}`)
+    } else {
+        // it need add testing route etxt
+        console.log("lainnya text")
+        // router.push(`activity/detail/${data}`)
+    }
 }
 
 

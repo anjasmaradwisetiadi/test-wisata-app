@@ -1,7 +1,7 @@
 <template>
     <div id="CreateSubActivityComponent">
         <div 
-            v-if="props?.loading || props?.isOpenModal" 
+            v-if=" props?.isOpenModal" 
             id="modal-bg" class="w-full h-full z-20 fixed top-0 blur-background overflow-hidden">
         </div>
         <!-- loading -->
@@ -190,8 +190,10 @@
 
 <script setup>
 import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
+import { useSubActivitiesStore } from '@/stores/subActivityStore';
 import '@/css/bullet-priority.css'
 
+const subActivitiesStore = useSubActivitiesStore()
 const nameSubActivity = ref('');
 const isOptionsExpanded = ref(false);
 const selectedOption = ref(1);
@@ -238,6 +240,10 @@ const props = defineProps({
     },
     isOpenModal: {
         default: false
+    },
+    id: {
+        type: String,
+        default: ''
     }
 })
 
@@ -248,6 +254,20 @@ const emit = defineEmits([
 ]);
 
 function onToggle(data) {
+    if(data){
+        if(props.nameModal === 'create_form'){
+            console.log("Create form")
+            const payload = {
+                "activity_id": props?.id,
+                "title": nameSubActivity.value,
+                "is_active": true,
+                "priority": selectedOption.value
+            }
+            subActivitiesStore.subActivitiesCreate(payload)
+        } else {
+            console.log("edit form")
+        }
+    }
     const payload = {
         name: props.nameModal,
         value: data

@@ -18,7 +18,7 @@ export const useActivitiesStore = defineStore('activities', {
     async activitiesList(payload) {
         this.loading = true;
         this.resetState()
-        await instanceAxios.get(`activities?page=${payload.page}&limit=${payload.limit}&search=${payload.search}`)
+        await instanceAxios.get(`activities?page=${payload.page}&limit=${payload.limit}`)
             .then((response)=>{
                 this.activities = response.data
                 this.loading = false;

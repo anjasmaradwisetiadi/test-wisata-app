@@ -221,23 +221,32 @@
         
     </div>
     <CreateSubActivityModal
-        :isOpenModal="isOpenModalGlobal"
-        :nameModal="nameModal" 
+        :isOpenModal="getIsOpenModalGlobal"
+        :nameModal="getNameModal" 
         @isOpenModelCloseGeneral="isOpenModelCloseServer"
-        :responseModal="responseModalGlobal" 
-        :loading="loading"
+        :responseModal="getResponseModalGlobal" 
+        :loading="getLoadingSubActivity"
+        :id="idActivity"
     >
     </CreateSubActivityModal>
+    <!-- ******* display loading, success ,error, activity  -->
     <LoadingAndAlert
         :loading="getLoadingActivity"
         :responseSwalError="getErrorActivity"
         :responseSwalSuccess="getSuccessActivity"
     >
     </LoadingAndAlert>
+        <!-- ******* display loading, success ,error, sub-activity  -->
+    <LoadingAndAlert
+        :loading="getLoadingSubActivities"
+        :responseSwalError="getErrorSubActivities"
+        :responseSwalSuccess="getSuccessSubActivities"
+    >
+    </LoadingAndAlert>
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
+import { ref, reactive, watch, computed, onMounted, onBeforeMount, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import FilterIcon from '@/assets/svg/FilterIcon.vue'
 import AToZ from '@/assets/svg/AToZ.vue';
@@ -248,16 +257,21 @@ import NotDone from '@/assets/svg/NotDone.vue';
 import ListDetailActivity from '@/views/DetailActivity/ListDetailActivity.vue'
 import CreateSubActivityModal from '@/views/DetailActivity/CreateSubActivityModal.vue';
 import { useActivitiesStore } from '@/stores/activitiesStore';
+import { useFormDataModalStore } from '@/stores/formDataModalStore';
+import { useSubActivitiesStore } from '@/stores/subActivityStore';
 import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
 
 const router = useRouter();
 const activitiesStore = useActivitiesStore()
+const formDataModalStore = useFormDataModalStore()
+const subActivitiesStore = useSubActivitiesStore()
 
 const selectOption = ref('')
 const isOptionsExpanded = ref(false)
 const isActivityEdit = ref(false);
-const activityName = ref('')
-const isDraggble = ref(false)
+const activityName = ref('');
+const isDraggble = ref(false);
+const idActivity = ref('')
 
 //********** */ trigger modal activity 
 
@@ -267,6 +281,7 @@ const nameModal = ref('create_form')
 const responseModalGlobal = ref(null)
 const isOpenModalGlobal = ref(false)
 
+//********** */ get activity response 
 const getLoadingActivity = computed(()=>{
     return activitiesStore.loading;
 })
@@ -285,8 +300,40 @@ const getSuccessActivity = computed(()=>{
     } 
 })
 
+//********** */ form modal data trigger response 
+const getIsOpenModalGlobal = computed(()=>{
+    return formDataModalStore.isOpenModalGlobal
+})
+const getNameModal = computed(()=>{
+    return formDataModalStore.nameModal
+})
+const getResponseModalGlobal = computed(()=>{
+    return formDataModalStore.responseModalGlobal
+})
+
+watchEffect(() => getIsOpenModalGlobal, getNameModal, getResponseModalGlobal, { immediate: true })
+
+// ********* get sub-activity response 
+const getLoadingSubActivities = computed(()=>{
+    return subActivitiesStore.loading;
+})
+const getSubActivitiesStore = computed(()=>{
+    return subActivitiesStore.subActivities;
+})
+const getErrorSubActivities = computed(()=>{
+    return subActivitiesStore.errorResponse;
+})
+
+const getSuccessSubActivities = computed(()=>{
+    if(subActivitiesStore?.updateResponse?.message === 'create'){
+        return subActivitiesStore?.updateResponse
+    } 
+})
+
+
 const getActivityParent = () =>{
     const payloadSlug = router.currentRoute.value.params.id;
+    idActivity.value = payloadSlug
     activitiesStore.activitiesDetail(payloadSlug);
 }
 
@@ -310,7 +357,8 @@ const editActivity = (data) => {
 const onUpdateActivity = (data) =>{
     isActivityEdit.value = false
     const payload = {
-        title: activityName.value
+        title: activityName.value,
+         type: 'activity_task'
     }
     activitiesStore.activitiesEdit(data?.id, payload)
 }
@@ -321,24 +369,24 @@ const setOption = (option) => {
 }
 
 const onCreateSubActivity = () => {
-    // ***** call modal need parse from store pinia
-    console.log("onCreateSubActivity")
-    isOpenModalGlobal.value = true;
-    loading.value = false;
-    nameModal.value ='create_form'
-    responseModalGlobal.value = {
+    const isOpenModalGlobal = true;
+    const nameModal ='create_form';
+    const responseModalGlobal = {
         title: 'Delete Data',
         message: 'Are you sure want delete this data ?'
     }
+
+    const payload = {
+        'isOpenModalGlobal': isOpenModalGlobal,
+        'nameModal': nameModal,
+        'responseModalGlobal': responseModalGlobal
+    }
+
+    formDataModalStore.onActivatedModal(payload)
 }
 
 const isOpenModelCloseServer = (event) =>{
-    // ***** call modal need parse from store pinia
-    isOpenModalGlobal.value = false;
-    loading.value = false;
-    nameModal.value = ''
-    responseModalGlobal.value = null
-    
+    formDataModalStore.onDeactivatedModal()
 }
 
 const onBack = () => {
