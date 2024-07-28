@@ -159,7 +159,7 @@
                                 >
                                     <div class="flex justify-center items-center">
                                         <div class="w-3/12 px-3 flex justify-center items-center">
-                                            <ZtoA></ZtoA>
+                                            <ZTOAIcon></ZTOAIcon>
                                         </div>
                                         <div class="w-6/12">
                                             Z To A
@@ -235,7 +235,7 @@ import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 import FilterIcon from '@/assets/svg/FilterIcon.vue'
 import AToZ from '@/assets/svg/AToZ.vue';
-import ZtoA from '@/assets/svg/ZtoA.vue';
+import ZTOAIcon from '@/assets/svg/ZTOAIcon.vue';
 import Newest from '@/assets/svg/Newest.vue';
 import Oldest from '@/assets/svg/Oldest.vue';
 import NotDone from '@/assets/svg/NotDone.vue';

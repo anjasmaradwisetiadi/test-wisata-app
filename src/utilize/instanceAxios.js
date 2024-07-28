@@ -17,4 +17,8 @@ instanceAxios.interceptors.request.use((config) => {
     return config;
 });
 
+const getLocalStorage = () =>{
+    return localStorage.getItem('user') ? localStorage.getItem('user') : null
+}
+
 export default instanceAxios;

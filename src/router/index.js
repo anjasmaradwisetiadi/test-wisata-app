@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore';
+
+const authStore = useAuthStore; 
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
@@ -15,21 +18,40 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/auth/Login.vue')
+      component: () => import('../views/auth/Login.vue'),
+      meta: {requiresUnauth: true}
     },
     {
       path: '/activity',
       name: 'activity',
-      component: () => import('../views/activity/Activity.vue')
+      component: () => import('../views/activity/Activity.vue'),
+      meta: {requiresAuth: true}
     },
     {
       path: '/activity/detail/:id',
       name: 'activity-detail',
-      component: () => import('../views/DetailActivity/DetailActivity.vue')
+      component: () => import('../views/DetailActivity/DetailActivity.vue'),
+      meta: {requiresAuth: true}
     },
 
     { path: '/:pathMatch(.*)*', component: () => import('../components/PageNotFound.vue'), meta: {requiresAuth: true} },
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const userToken = localStorage.getItem('user') ? localStorage.getItem('user') : null
+  const getToken = JSON.parse(userToken)
+  const auth = to.meta.requiresAuth; 
+  const unauth = to.meta.requiresUnauth; 
+
+  if (auth && !getToken) {
+    next('/login');
+  } else if (unauth && getToken) {
+    next('/tier-list');
+  } else {
+    next();
+  }
+
 })
 
 export default router

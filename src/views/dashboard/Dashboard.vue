@@ -15,7 +15,7 @@ import Profile from './Profile.vue'
 import UserStatus from './UserStatus.vue';
 import {useDashboardStore} from '../../stores/dashboard';
 import CarouselNews from './CarouselNews.vue';
-import Loading from '../../components/Loading.vue'
+import Loading from '../../components/LoadingAndAlert.vue'
 
 const dashboardStore = useDashboardStore();
 
