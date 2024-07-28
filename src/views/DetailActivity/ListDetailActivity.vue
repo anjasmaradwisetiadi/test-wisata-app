@@ -1,14 +1,14 @@
 <template>
     <div id="ListDetailActivity" class="flex flex-row flex-wrap justify-center mt-32 lg:mt-32 pt-28 lg:pt-28">
-        <template v-if="!dataSubMenuActivity?.length">
+        <template v-if="!getLoading && !getSubActivities?.data?.length">
             <img 
                 @click="onCreateSubActivity()"
                 class="w-[92vw-10rem] cursor-pointer" src="@/assets/image/todo-empty-state.png" alt="image">
         </template>
-        <template v-if="dataSubMenuActivity?.length">
+        <template v-if="!getLoading && getSubActivitiess?.data?.length">
             <div class="flex flex-col w-full">
                 <div
-                    v-for="(item, index) in dataSubMenuActivity"
+                    v-for="(item, index) in getSubActivities?.data"
                     :key="index"
                     class="flex w-full shadow-lg px-3 py-6 mt-2 border border border-solid border-gray-200"
                 >
@@ -86,8 +86,19 @@
 
 <script setup>
 import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
+import { useSubActivitiesStore } from '@/stores/subActivityStore';
+import { useActivitiesStore } from '@/stores/activitiesStore';
+import { useRouter } from 'vue-router';
 import { activity_detail_dummy_data } from '@/utilize/DataDummy';
 import '@/css/bullet-priority.css'
+
+const router = useRouter();
+const activitiesStore = useActivitiesStore()
+const subActivitiesStore = useSubActivitiesStore()
+
+const page = ref(0);
+const limit = ref(0);
+const search = ref('');
 
 const props = defineProps({
     isDraggble: {
@@ -95,6 +106,37 @@ const props = defineProps({
         default: false
     }
 })
+
+const getLoading = computed(()=>{
+    return activitiesStore.loading;
+})
+
+const getSubActivities = computed(()=>{
+    return subActivitiesStore.subActivities;
+})
+
+onMounted(()=>{
+    subActivity()
+})
+
+const subActivity = () => {
+    const routeId = router.currentRoute.value.params.id;
+    subActivitiesStore.subActivitiesList(routeId)
+}
+
+function paginate(pageParam='', limitParam='', searchParam=''){
+    page.value = pageParam;
+    limit.value = limitParam;
+    search.value = searchParam;
+    
+    const payloadPage = {
+        page: page.value,
+        limit: limit.value,
+        search: search.value,
+    }
+
+    return payloadPage
+}
 
 const dataSubMenuActivity = ref(activity_detail_dummy_data.data)
 const loading = ref(false)
