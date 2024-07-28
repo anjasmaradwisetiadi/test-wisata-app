@@ -17,7 +17,6 @@
 
 <script setup>
 import { computed } from 'vue';
-import {collectUrl} from '../utilize/collectUrl'
 import { successHandle } from '@/utilize/HandleSuccess';
 import { errorHandle } from '@/utilize/HandleError';
 
