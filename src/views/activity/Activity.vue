@@ -35,7 +35,7 @@
                             <div class="flex items-center align-center">
                                 <span 
                                     class="material-icons-outlined text-gray-500 cursor-pointer text-3xl" style="line-height: 1rem;" 
-                                    @click="onDelete(item?.created_at)"
+                                    @click="onDelete(item)"
                                 >
                                     delete
                                 </span>
@@ -49,6 +49,7 @@
     <LoadingAndAlert
         :loading="getLoading"
         :responseSwalError="getError"
+        :responseSwalSuccess="getSuccess"
     >
 
     </LoadingAndAlert>
@@ -62,6 +63,7 @@ import DeleteDataModal from '@/components/DeleteDataModal.vue';
 import { utilize } from '@/utilize/index'
 import { useActivitiesStore } from '@/stores/activitiesStore';
 import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
+import Swal from 'sweetalert2';
 
 const router = useRouter();
 const activitiesStore = useActivitiesStore()
@@ -87,6 +89,19 @@ const getActivities = computed(()=>{
 const getError = computed(()=>{
     return activitiesStore.errorResponse;
 })
+
+const getSuccess = computed(()=>{
+    if(activitiesStore?.createResponse?.message === 'create'){
+        return activitiesStore?.createResponse
+    } else if (activitiesStore?.deleteResponse?.message === 'delete') {
+        return activitiesStore?.deleteResponse
+    } 
+})
+watch(getSuccess, (newValue, oldValue) => {
+    if(newValue){
+        return getSuccess
+    }
+},{ immediate: true })
 
 onMounted(()=>{
     activitiesStore.activitiesList(paginate())
@@ -117,25 +132,35 @@ function isOpenModelCloseServer (event) {
     isConfirmModalGlobal.value = false;
 }
 
-const onDelete = () => {
-    isConfirmModal.value = true;
-    isOpenModalGlobal.value = true;
-    isConfirmModalGlobal.value = true;
-    responseModalGlobal.value = {
-        title: 'Delete Data',
-        message: 'Are you sure want delete this data ?'
-    }
+const onDelete = (data) => {
+    Swal.fire({
+        icon: "waring",
+        text: `Are you sure want delete this activity ${data.title}?`,
+        title: "Delete Activity",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result)=>{
+        if (result.isConfirmed) {
+            activitiesStore.activitiesDelete(data?.id)
+            activitiesStore.activitiesList(paginate())
+        }
+    })
 }
 
 const onCreateActivity = () => {
-    console.log("create activity = ")
+    const payload = {
+        title: 'New Task'
+    }
+    activitiesStore.activitiesCreate(payload)
 }
 
 const onDetail = (data) =>{
     if(data?.type === "activity_task"){
         router.push(`activity/detail/${data?.id}`)
     } else {
-        console.log("lainnya")
+        console.log("lainnya text")
         // router.push(`activity/detail/${data}`)
     }
 }

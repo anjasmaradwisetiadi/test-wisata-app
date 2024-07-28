@@ -33,13 +33,17 @@ export const useActivitiesStore = defineStore('activities', {
         this.loading = true;
         await instanceAxios.post('activities', payload)
             .then((response)=>{
-                console.log("response = ")
-                console.log(response)
+                const payloadCreate = {
+                    status: true,
+                    message: 'create'
+                }
+                this.createResponse = payloadCreate
                 this.loading = false;
             })
             .catch((error)=>{
                 console.log("error = ")
                 console.log(error)
+                this.errorResponse = true
                 this.loading = false;
             })
     },
@@ -61,8 +65,6 @@ export const useActivitiesStore = defineStore('activities', {
         this.loading = true;
         await instanceAxios.post(`activities/${id}`, payload)
             .then((response)=>{
-                console.log("response = ")
-                console.log(response)
                 this.loading = false;
             })
             .catch((error)=>{
@@ -72,17 +74,21 @@ export const useActivitiesStore = defineStore('activities', {
             })
     },
 
-    async activitiesDelete(id, payload) {
+    async activitiesDelete(id) {
         this.loading = true;
-        await instanceAxios.delete(`activities/${id}`, payload)
+        await instanceAxios.delete(`activities/${id}`)
             .then((response)=>{
-                console.log("response = ")
-                console.log(response)
+                const payloadDelete = {
+                    status: true,
+                    message: 'delete'
+                }
+                this.deleteResponse = payloadDelete;
                 this.loading = false;
             })
             .catch((error)=>{
                 console.log("error = ")
                 console.log(error)
+                this.errorResponse = true;
                 this.loading = false;
             })
     },
