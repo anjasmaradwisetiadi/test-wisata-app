@@ -99,6 +99,7 @@ const getSuccess = computed(()=>{
 })
 watch(getSuccess, (newValue, oldValue) => {
     if(newValue){
+        activitiesStore.activitiesList(paginate())
         return getSuccess
     }
 },{ immediate: true })
@@ -144,7 +145,6 @@ const onDelete = (data) => {
     }).then((result)=>{
         if (result.isConfirmed) {
             activitiesStore.activitiesDelete(data?.id)
-            activitiesStore.activitiesList(paginate())
         }
     })
 }
@@ -157,12 +157,15 @@ const onCreateActivity = () => {
 }
 
 const onDetail = (data) =>{
-    if(data?.type === "activity_task"){
-        router.push(`activity/detail/${data?.id}`)
-    } else {
-        console.log("lainnya text")
-        // router.push(`activity/detail/${data}`)
-    }
+    router.push(`activity/detail/${data?.id}`)
+    
+    //********** */  it neeed BE fixing update data
+    // if(data?.type === "activity_task"){
+    //     router.push(`activity/detail/${data?.id}`)
+    // } else {
+    //     console.log("lainnya text")
+    //     // router.push(`activity/detail/${data}`)
+    // }
 }
 
 

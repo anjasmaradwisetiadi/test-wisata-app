@@ -29,14 +29,14 @@
                     </template>
                     <template v-if="!isActivityEdit">
                         <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
-                            @click="editActivity(getDetailResponseActivity?.title)"
+                            @click="editActivity(getDetailResponseActivity)"
                         >
                             edit
                         </span>
                     </template>
                     <template v-if="isActivityEdit">
                         <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
-                            @click="onSubmitActivity()"
+                            @click="onUpdateActivity(getDetailResponseActivity)"
                         >
                             done
                         </span>
@@ -231,6 +231,7 @@
     <LoadingAndAlert
         :loading="getLoadingActivity"
         :responseSwalError="getErrorActivity"
+        :responseSwalSuccess="getSuccessActivity"
     >
     </LoadingAndAlert>
 </template>
@@ -247,6 +248,7 @@ import NotDone from '@/assets/svg/NotDone.vue';
 import ListDetailActivity from '@/views/DetailActivity/ListDetailActivity.vue'
 import CreateSubActivityModal from '@/views/DetailActivity/CreateSubActivityModal.vue';
 import { useActivitiesStore } from '@/stores/activitiesStore';
+import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
 
 const router = useRouter();
 const activitiesStore = useActivitiesStore()
@@ -277,22 +279,40 @@ const getDetailResponseActivity = computed(()=>{
     return activitiesStore.detailResponse;
 })
 
+const getSuccessActivity = computed(()=>{
+    if(activitiesStore?.updateResponse?.message === 'update'){
+        return activitiesStore?.updateResponse
+    } 
+})
 
+const getActivityParent = () =>{
+    const payloadSlug = router.currentRoute.value.params.id;
+    activitiesStore.activitiesDetail(payloadSlug);
+}
+
+watch(getSuccessActivity, (newValue, oldValue) => {
+    if(newValue){
+        getActivityParent()
+        return getSuccessActivity
+    }
+},{ immediate: true })
 
 
 onMounted(()=>{
-    const payloadSlug = router.currentRoute.value.params.id;
-    activitiesStore.activitiesDetail(payloadSlug);
+    getActivityParent();
 })
 
 const editActivity = (data) => {
     isActivityEdit.value = true
-    activityName.value = data
+    activityName.value = data?.title
 }
 
-const onSubmitActivity = () =>{
+const onUpdateActivity = (data) =>{
     isActivityEdit.value = false
-    console.log("submit activity")
+    const payload = {
+        title: activityName.value
+    }
+    activitiesStore.activitiesEdit(data?.id, payload)
 }
 
 const setOption = (option) => {

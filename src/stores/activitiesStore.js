@@ -17,6 +17,7 @@ export const useActivitiesStore = defineStore('activities', {
   actions:{
     async activitiesList(payload) {
         this.loading = true;
+        this.resetState()
         await instanceAxios.get(`activities?page=${payload.page}&limit=${payload.limit}&search=${payload.search}`)
             .then((response)=>{
                 this.activities = response.data
@@ -63,8 +64,13 @@ export const useActivitiesStore = defineStore('activities', {
     },
     async activitiesEdit(id, payload) {
         this.loading = true;
-        await instanceAxios.post(`activities/${id}`, payload)
+        await instanceAxios.patch(`activities/${id}`, payload)
             .then((response)=>{
+                const payloadUpdate = {
+                    status: true,
+                    message: 'update'
+                }
+                this.updateResponse = payloadUpdate;
                 this.loading = false;
             })
             .catch((error)=>{
@@ -92,6 +98,13 @@ export const useActivitiesStore = defineStore('activities', {
                 this.loading = false;
             })
     },
+
+    async resetState() {
+        this.createResponse= null;
+        this.detailResponse= null;
+        this.updateResponse= null;
+        this.deleteResponse= null;
+    }
 
   },
 
