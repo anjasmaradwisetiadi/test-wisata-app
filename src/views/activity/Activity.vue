@@ -59,7 +59,6 @@
 import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 import { activity_dummy_data } from '@/utilize/DataDummy';
-import DeleteDataModal from '@/components/DeleteDataModal.vue';
 import { utilize } from '@/utilize/index'
 import { useActivitiesStore } from '@/stores/activitiesStore';
 import LoadingAndAlert from '@/components/LoadingAndAlert.vue';

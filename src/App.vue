@@ -10,9 +10,6 @@
       <section class="bg-gray-50 dark:bg-gray-900">
         <RouterView />
       </section>
-      <!-- <template v-if="nameRoutePath !== 'notification'">
-        <NavbarBottom></NavbarBottom>
-      </template> -->
     </div>
   </div>
 
@@ -21,7 +18,6 @@
 <script setup>
 import { ref, reactive, watch, onMounted, onUpdated, onBeforeMount, computed} from 'vue';
 import Navbar from '../src/components/Navbar.vue'
-import NavbarBottom from './components/NavbarBottom.vue'
 import { useAuthStore } from './stores/authStore';
 import { useRouter } from 'vue-router';
 import axios from 'axios';

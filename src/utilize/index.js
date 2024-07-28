@@ -28,30 +28,4 @@ export const utilize = {
         return '--:--';
     },
 
-    convertTimeBetween(timeStart, timeCurrent){
-        if(dayjs(timeStart).isValid() && dayjs(timeCurrent).isValid()){
-            const dateTimeStart = timeStart.toString().length === 10 ? timeStart * 1000 : timeStart;
-            const dateTimeCurrent = timeCurrent.toString().length === 10 ? timeCurrent * 1000 : timeCurrent;
-            const result = dayjs(dayjs(dateTimeCurrent).diff(dayjs(dateTimeStart))).format('HH:mm:ss')
-            return result
-        } 
-        return '--:--';
-    },
-
-    convertDiffTime(startTime, endTime){
-        if(dayjs(startTime).isValid() && dayjs(endTime).isValid()){
-            const dateStart = startTime.toString().length === 10 ? startTime * 1000 : startTime;
-            const dateEnd = endTime.toString().length === 10 ? endTime * 1000 : endTime;
-            const differenceTime = dayjs(dateEnd).diff(dayjs(dateStart), 'day')
-            if(differenceTime === 0){
-                return 'Today';
-            } else if (differenceTime === 1){
-                return 'Yesterday';
-            } else {
-                return dayjs(dateEnd).format('YYYY-MM-DD');
-            }
-        }
-        return ''
-    }
-
 }
