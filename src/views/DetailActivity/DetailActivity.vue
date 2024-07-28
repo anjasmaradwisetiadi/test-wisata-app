@@ -12,7 +12,7 @@
                         arrow_back_ios
                     </span>
                     <template v-if="!isActivityEdit">
-                        <h1 class="lg:text-3xl md:text-3xl text-xl cursor-pointer"> {{activityName}}</h1>
+                        <h1 class="lg:text-3xl md:text-3xl text-xl cursor-pointer"> {{getDetailResponseActivity?.title}}</h1>
                     </template>
                     <template v-if="isActivityEdit">
                         <div >   
@@ -29,14 +29,14 @@
                     </template>
                     <template v-if="!isActivityEdit">
                         <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
-                            @click="editActivity()"
+                            @click="editActivity(getDetailResponseActivity)"
                         >
                             edit
                         </span>
                     </template>
                     <template v-if="isActivityEdit">
                         <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
-                            @click="onSubmitActivity()"
+                            @click="onUpdateActivity(getDetailResponseActivity)"
                         >
                             done
                         </span>
@@ -228,6 +228,12 @@
         :loading="loading"
     >
     </CreateSubActivityModal>
+    <LoadingAndAlert
+        :loading="getLoadingActivity"
+        :responseSwalError="getErrorActivity"
+        :responseSwalSuccess="getSuccessActivity"
+    >
+    </LoadingAndAlert>
 </template>
 
 <script setup>
@@ -241,13 +247,16 @@ import Oldest from '@/assets/svg/Oldest.vue';
 import NotDone from '@/assets/svg/NotDone.vue';
 import ListDetailActivity from '@/views/DetailActivity/ListDetailActivity.vue'
 import CreateSubActivityModal from '@/views/DetailActivity/CreateSubActivityModal.vue';
+import { useActivitiesStore } from '@/stores/activitiesStore';
+import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
 
 const router = useRouter();
+const activitiesStore = useActivitiesStore()
 
 const selectOption = ref('')
 const isOptionsExpanded = ref(false)
 const isActivityEdit = ref(false);
-const activityName = ref('New Create Activity')
+const activityName = ref('')
 const isDraggble = ref(false)
 
 //********** */ trigger modal activity 
@@ -258,17 +267,52 @@ const nameModal = ref('create_form')
 const responseModalGlobal = ref(null)
 const isOpenModalGlobal = ref(false)
 
-onMounted(()=>{
-
+const getLoadingActivity = computed(()=>{
+    return activitiesStore.loading;
 })
 
-const editActivity = () => {
-    isActivityEdit.value = true
+const getErrorActivity = computed(()=>{
+    return activitiesStore.errorResponse;
+})
+
+const getDetailResponseActivity = computed(()=>{
+    return activitiesStore.detailResponse;
+})
+
+const getSuccessActivity = computed(()=>{
+    if(activitiesStore?.updateResponse?.message === 'update'){
+        return activitiesStore?.updateResponse
+    } 
+})
+
+const getActivityParent = () =>{
+    const payloadSlug = router.currentRoute.value.params.id;
+    activitiesStore.activitiesDetail(payloadSlug);
 }
 
-const onSubmitActivity = () =>{
+watch(getSuccessActivity, (newValue, oldValue) => {
+    if(newValue){
+        getActivityParent()
+        return getSuccessActivity
+    }
+},{ immediate: true })
+
+
+onMounted(()=>{
+    getActivityParent();
+})
+
+const editActivity = (data) => {
+    isActivityEdit.value = true
+    activityName.value = data?.title
+}
+
+const onUpdateActivity = (data) =>{
     isActivityEdit.value = false
-    console.log("submit activity")
+    const payload = {
+        title: activityName.value
+    }
+    activitiesStore.activitiesEdit(data?.id, payload)
 }
 
 const setOption = (option) => {

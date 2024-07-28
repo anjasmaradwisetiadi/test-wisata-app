@@ -10,66 +10,101 @@ export const useActivitiesStore = defineStore('activities', {
      detailResponse: null,
      updateResponse: null,
      deleteResponse: null,
+     errorResponse: false
     }
   },
 
   actions:{
-    async activitiesList() {
-        await instanceAxios.get('activities')
+    async activitiesList(payload) {
+        this.loading = true;
+        this.resetState()
+        await instanceAxios.get(`activities?page=${payload.page}&limit=${payload.limit}&search=${payload.search}`)
             .then((response)=>{
-                console.log("response = ") 
-                console.log(response)
+                this.activities = response.data
+                this.loading = false;
             })
             .catch((error)=>{
                 console.log("error = ")
                 console.log(error)
+                this.errorResponse = true
+                this.loading = false;
             })
     },
     async activitiesCreate(payload) {
+        this.loading = true;
         await instanceAxios.post('activities', payload)
             .then((response)=>{
-                console.log("response = ")
-                console.log(response)
+                const payloadCreate = {
+                    status: true,
+                    message: 'create'
+                }
+                this.createResponse = payloadCreate
+                this.loading = false;
             })
             .catch((error)=>{
                 console.log("error = ")
                 console.log(error)
+                this.errorResponse = true
+                this.loading = false;
             })
     },
-    async activitiesDetail(id, payload) {
-        await instanceAxios.get(`activities/${id}`, payload)
+    async activitiesDetail(id) {
+        this.loading = true;
+        await instanceAxios.get(`activities/${id}`)
             .then((response)=>{
-                console.log("response = ")
-                console.log(response)
+                this.detailResponse = response.data.data
+                this.loading = false;
             })
             .catch((error)=>{
                 console.log("error = ")
                 console.log(error)
+                this.errorResponse = true
+                this.loading = false;
             })
     },
     async activitiesEdit(id, payload) {
-        await instanceAxios.post(`activities/${id}`, payload)
+        this.loading = true;
+        await instanceAxios.patch(`activities/${id}`, payload)
             .then((response)=>{
-                console.log("response = ")
-                console.log(response)
+                const payloadUpdate = {
+                    status: true,
+                    message: 'update'
+                }
+                this.updateResponse = payloadUpdate;
+                this.loading = false;
             })
             .catch((error)=>{
                 console.log("error = ")
                 console.log(error)
+                this.loading = false;
             })
     },
 
-    async activitiesDelete(id, payload) {
-        await instanceAxios.delete(`activities/${id}`, payload)
+    async activitiesDelete(id) {
+        this.loading = true;
+        await instanceAxios.delete(`activities/${id}`)
             .then((response)=>{
-                console.log("response = ")
-                console.log(response)
+                const payloadDelete = {
+                    status: true,
+                    message: 'delete'
+                }
+                this.deleteResponse = payloadDelete;
+                this.loading = false;
             })
             .catch((error)=>{
                 console.log("error = ")
                 console.log(error)
+                this.errorResponse = true;
+                this.loading = false;
             })
     },
+
+    async resetState() {
+        this.createResponse= null;
+        this.detailResponse= null;
+        this.updateResponse= null;
+        this.deleteResponse= null;
+    }
 
   },
 

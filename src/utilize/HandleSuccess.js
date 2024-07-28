@@ -5,7 +5,7 @@ export const successHandle = {
         let textPrint  = ''
         if(text === 'create'){
             textPrint = 'Successfull create data'
-        } else if(text === 'edit'){
+        } else if(text === 'update'){
             textPrint = 'Successfull edit data'
         } else {
             textPrint = 'Successfull delete data'
