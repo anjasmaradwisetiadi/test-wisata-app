@@ -70,7 +70,7 @@ watch(getLogoutResponse, (newValue, oldValue) => {
             if (result.isConfirmed || result.isDismissed) {
                 authStore.logoutResponse = null
                 authStore.loading = false;
-
+                
                 router.push('/login')
             }
         })

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import instanceAxios from '@/utilize/instanceAxios'
+import { useRouter } from 'vue-router';
 
 export const useAuthStore = defineStore('auth', {
   state : () =>{
@@ -16,7 +17,12 @@ export const useAuthStore = defineStore('auth', {
         await instanceAxios.post('auth/login', payload)
             .then((resp)=>{
                 this.loginResponse = resp
-                localStorage.setItem('user', JSON.stringify(resp.data.data));
+                const makeExpiredTime = this.makeExpiredTime(2);
+                let payload = {
+                    'expired_time': makeExpiredTime,
+                    ...resp.data.data
+                }
+                localStorage.setItem('user', JSON.stringify(payload));
                 this.loading = false;
             })
             .catch((error)=>{
@@ -26,6 +32,13 @@ export const useAuthStore = defineStore('auth', {
                 this.loading = false;
             })
     },
+
+    makeExpiredTime(expiresInMinutes){
+        const now = new Date();
+        const expirationTime = now.getTime() + expiresInMinutes * 6000; // Convert minutes to milliseconds
+        return expirationTime
+    },
+
     async logout(){
         this.loading = true;
         await instanceAxios.post('auth/logout')
@@ -40,6 +53,22 @@ export const useAuthStore = defineStore('auth', {
                 this.logoutResponse = error.response
                 this.loading = false;
             })
+    },
+
+    checkUserExpired(){
+        const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
+        const expirationTime = user?.expired_time;
+        const now = new Date().getTime();
+        return now > expirationTime;
+    },
+
+    autoLogout(){
+        const router = useRouter();
+        if(this.checkUserExpired()){
+            localStorage.removeItem('user');
+            return router.push('/login');
+        }
+        return localStorage.getItem('user')
     }
   },
 

@@ -4,7 +4,9 @@
     <div
       class="flex flex-col justify-center"
     >
-      <Navbar></Navbar>
+      <template v-if="nameRoutePath !== 'login'">
+        <Navbar></Navbar>
+      </template>
       <section class="bg-gray-50 dark:bg-gray-900">
         <RouterView />
       </section>
@@ -17,17 +19,23 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted, onUpdated} from 'vue';
+import { ref, reactive, watch, onMounted, onUpdated, onBeforeMount, computed} from 'vue';
 import Navbar from '../src/components/Navbar.vue'
 import NavbarBottom from './components/NavbarBottom.vue'
+import { useAuthStore } from './stores/authStore';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const router = useRouter();
+const authStore = useAuthStore()
 
 let windowWidth = ref(0);
 let viewMobile = ref(true);
 const nameRoutePath = ref('');
+
+const checkAutoLogout = computed(()=>{
+  return authStore.checkUserExpired()
+})
 
 watch(windowWidth, (newValue, oldValue)=>{
   if (newValue >= 576) {
@@ -37,32 +45,21 @@ watch(windowWidth, (newValue, oldValue)=>{
       }
 })
 
+watch(checkAutoLogout, (newValue, oldValue)=>{
+  if(newValue){
+    authStore.autoLogout();
+  }
+})
+
 watch(() => router.currentRoute.value, fetchData, { immediate: true })
+
+onBeforeMount(()=>{
+  authStore.autoLogout()
+})
 
 onMounted(()=>{
   onResize
-
-  axios({
-      method: 'GET',
-      url: 'https://tall-masks-appear-lazily.a276.dcdg.xyz/discovery-service/api/v1/profiles',
-      headers:
-          {
-              'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjQ2YjU0Mzk3OGY2NjUwODU2MTIxOSIsIm5hbWUiOiJ1c2VyIiwicm9sZSI6Miwic3ViIjoidXNlckBnbWFpbC5jb20iLCJpYXQiOjE3MTkwMzgwMTN9.WXCTPLQ4Kq501maKdKTfv-gK1X41bQdHcN8ZP8QCDw8'
-          }
-    })
-    .then((response)=>{
-          console.log("response = ")
-          console.log(response)
-      })
-      .catch((error)=>{
-          console.log("error message = ");
-          console.log(error)
-          // Swal.fire({
-          //     title: "Something Wrong",
-          //     text: error?.response?.data?.message,
-          //     icon: "error",
-          // })
-    })
+  authStore.autoLogout()
 })
 
 onUpdated(()=>{
