@@ -33,6 +33,12 @@ const router = createRouter({
       component: () => import('../views/DetailActivity/DetailActivity.vue'),
       meta: {requiresAuth: true}
     },
+    {
+      path: '/draggble',
+      name: 'draggble',
+      component: () => import('../views/DraggableFeature/DraggbleView.vue'),
+      meta: {requiresAuth: true}
+    },
 
     { path: '/:pathMatch(.*)*', component: () => import('../components/PageNotFound.vue'), meta: {requiresAuth: true} },
   ]

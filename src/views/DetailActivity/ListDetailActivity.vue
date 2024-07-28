@@ -54,7 +54,7 @@
                         <div class="flex w-full text-xl overflow-text">
                             <template v-if="item.is_active">
                                 <span>
-                                    {{item?.title}}
+                                    {{item?.title}} 
                                 </span>
                             </template>
                             <template v-if="!item.is_active">
