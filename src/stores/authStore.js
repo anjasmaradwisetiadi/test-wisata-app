@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('auth', {
         await instanceAxios.post('auth/login', payload)
             .then((resp)=>{
                 this.loginResponse = resp
-                const makeExpiredTime = this.makeExpiredTime(2);
+                const makeExpiredTime = this.makeExpiredTime(1399);
                 let payload = {
                     'expired_time': makeExpiredTime,
                     ...resp.data.data
