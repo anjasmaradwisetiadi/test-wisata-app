@@ -28,14 +28,17 @@
                         </div>
                     </template>
                     <template v-if="!isActivityEdit">
-                        <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
+                        <span 
+                            v-if="selectOption !== 'notdone'"
+                            class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
                             @click="editActivity(getDetailResponseActivity)"
                         >
                             edit
                         </span>
                     </template>
                     <template v-if="isActivityEdit">
-                        <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
+                        <span
+                            class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
                             @click="onUpdateActivity(getDetailResponseActivity)"
                         >
                             done
@@ -47,8 +50,7 @@
                         <!--********** draggable mode -->
                         <button
                             class="flex justify-center h-14 w-14 py-4 px-3 rounded-full items-center bg-white border border-gray-400 mr-4"
-                            @click="isDraggble = !isDraggble"
-                            @blur="isDraggble = false"
+                            @click="modeDraggbale()"
                         >
                             <template v-if="!isDraggble">
                                 <span class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined cursor-pointer" 
@@ -235,6 +237,7 @@
             <!--********* table detail activity  -->
             <ListDetailActivity
                 :isDraggble = "isDraggble"
+                @sendNewListTask="getNewListTask"
             ></ListDetailActivity>
         </div>
         
@@ -291,7 +294,8 @@ const isOptionsExpanded = ref(false)
 const isActivityEdit = ref(false);
 const activityName = ref('');
 const isDraggble = ref(false);
-const idActivity = ref('')
+const idActivity = ref('');
+const newListTaskDraggble = ref([]);
 
 //********** */ trigger modal activity 
 
@@ -415,7 +419,8 @@ const setOption = (option) => {
     } else {
         filterFormat = ''
     }
-    subActivitiesStore.subActivitiesListFilter( routeId, filterFormat)
+
+    subActivitiesStore.subActivitiesListFilter( routeId, filterFormat);
 }
 
 const onCreateSubActivity = () => {
@@ -436,8 +441,38 @@ const onCreateSubActivity = () => {
 }
 
 const isOpenModelCloseServer = (event) =>{
-    // getSubActivity()
     formDataModalStore.onDeactivatedModal()
+}
+
+const modeDraggbale = () =>{
+    let newOrder = [];
+    isDraggble.value = !isDraggble.value
+    if(isDraggble.value){
+        newOrder = [];
+    } else {
+        newListTaskDraggble.value.forEach((item,index)=>{
+            const payload = {
+                "id": item?.id,
+                "activity_id": item?.activity_id,
+                "title": item?.title,
+                "is_active": item?.is_active,
+                "priority": item?.priority,
+                "order": (index+1),
+                "created_at": item?.created_at,
+                "updated_at": item?.updated_at
+            }   
+            newOrder.push(payload)
+        }) 
+        const payloadNewOrderTask = {
+            tasks: newOrder
+        }
+
+        subActivitiesStore.subActivitiesBatch(payloadNewOrderTask)
+    }
+} 
+
+const getNewListTask = ($event) =>{
+    newListTaskDraggble.value = $event.tasks
 }
 
 const onBack = () => {

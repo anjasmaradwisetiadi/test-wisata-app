@@ -6,11 +6,13 @@ export const useSubActivitiesStore = defineStore('subActivities', {
     return {
      loading: false,
      subActivities: null,
+     subActivitiesTask: [],
      createResponse: null,
      detailResponse: null,
      updateResponse: null,
      deleteResponse: null,
-     errorResponse: false
+     errorResponse: false,
+     filterOptionsResponse: '',
     }
   },
 
@@ -21,11 +23,10 @@ export const useSubActivitiesStore = defineStore('subActivities', {
         await instanceAxios.get(`tasks?activity_id=${id}`)
             .then((response)=>{
                 this.subActivities = this.orderingDefaultList(response.data);
+                this.subActivitiesTask = this.subActivities?.tasks
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.errorResponse = true
                 this.loading = false;
             })
@@ -36,11 +37,10 @@ export const useSubActivitiesStore = defineStore('subActivities', {
       await instanceAxios.get(`tasks?activity_id=${id}${payload}`)
           .then((response)=>{
               this.subActivities = this.orderingByFiltering(response.data);
+              this.subActivitiesTask = this.subActivities?.tasks
               this.loading = false;
           })
           .catch((error)=>{
-              console.log("error = ")
-              console.log(error)
               this.errorResponse = true
               this.loading = false;
           })
@@ -57,8 +57,6 @@ export const useSubActivitiesStore = defineStore('subActivities', {
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.errorResponse = true
                 this.loading = false;
             })
@@ -71,8 +69,6 @@ export const useSubActivitiesStore = defineStore('subActivities', {
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.errorResponse = true
                 this.loading = false;
             })
@@ -89,8 +85,6 @@ export const useSubActivitiesStore = defineStore('subActivities', {
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.loading = false;
             })
     },
@@ -107,11 +101,26 @@ export const useSubActivitiesStore = defineStore('subActivities', {
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.errorResponse = true;
                 this.loading = false;
             })
+    },
+
+    async subActivitiesBatch(payload){
+      this.loading = true;
+      await instanceAxios.patch(`tasks/batch`, payload)
+        .then((response)=>{
+            const payloadUpdate = {
+                status: true,
+                message: 'update'
+            }
+            this.updateResponse = payloadUpdate;
+            this.loading = false;
+        })
+        .catch((error)=>{
+            this.errorResponse = true;
+            this.loading = false;
+        })
     },
 
     async resetState() {
@@ -152,14 +161,13 @@ export const useSubActivitiesStore = defineStore('subActivities', {
         "paging": data?.paging,
         "tasks": newOrderTasks
       }
-      console.log("orderingDefaultSubActivitiesList = ")
-      console.log(newResponse)
 
       return newResponse
     },
 
     orderingByFiltering(data){
-      result.forEach((item, index)=>{
+      let newOrderTasks = [];
+      data.tasks.forEach((item, index)=>{
           const payload = {
             "id": item?.id,
             "activity_id": item?.activity_id,
@@ -178,16 +186,15 @@ export const useSubActivitiesStore = defineStore('subActivities', {
         "paging": data?.paging,
         "tasks": newOrderTasks
       }
-      console.log("orderingByFiltering = ")
-      console.log(newResponse)
 
-      return newResponse
+      return newResponse;
+    },
+    filterOption(payload){
+      this.filterOptionsResponse = payload
     }
-
 
   },
 
   getters: {
-    doubleCount: (state) => state.count * 2,
   }
 })

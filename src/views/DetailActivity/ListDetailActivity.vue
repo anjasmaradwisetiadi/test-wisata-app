@@ -6,10 +6,18 @@
                 class="w-[92vw-10rem] cursor-pointer" src="@/assets/image/todo-empty-state.png" alt="image">
         </template>
         <template v-if="!getLoading && getSubActivities?.tasks?.length">
-            <div class="flex flex-col w-full">
+            <VueDraggable
+                ref="el"
+                v-model="listDraggble"
+                @end="onEnd"
+                animation="150"
+                ghostClass="ghost"
+                class="flex flex-col w-full"
+                :disabled="!isDraggble"
+            >
                 <div
-                    v-for="(item, index) in getSubActivities?.tasks"
-                    :key="index"
+                    v-for="(item) in listDraggble"
+                    :key="item?.order"
                     class="flex w-full shadow-lg px-3 py-6 mt-2 border border border-solid border-gray-200"
                 >
                     <div class="w-14 flex justify-center items-center align-center mr-1">
@@ -84,7 +92,7 @@
                         </div>
                     </template>
                 </div>
-            </div>
+            </VueDraggable>
         </template>
     </div>
 </template>
@@ -96,6 +104,7 @@ import { useActivitiesStore } from '@/stores/activitiesStore';
 import { useRouter } from 'vue-router';
 import { activity_detail_dummy_data } from '@/utilize/DataDummy';
 import { useFormDataModalStore } from '@/stores/formDataModalStore';
+import { VueDraggable} from 'vue-draggable-plus';
 import Swal from 'sweetalert2';
 
 import '@/css/bullet-priority.css'
@@ -108,6 +117,12 @@ const formDataModalStore = useFormDataModalStore()
 const page = ref(0);
 const limit = ref(0);
 const search = ref('');
+const listDraggble = ref([])
+const state = reactive(
+    {
+        listDraggble: []
+    }
+)
 
 const props = defineProps({
     isDraggble: {
@@ -115,6 +130,10 @@ const props = defineProps({
         default: false
     }
 })
+
+const emit = defineEmits([,
+    'sendNewListTask',
+]);
 
 const getLoading = computed(()=>{
     return activitiesStore.loading;
@@ -139,8 +158,16 @@ watchEffect(() =>
 
 // ********** sub activity modal
 const getSubActivities = computed(()=>{
+    listDraggble.value =  subActivitiesStore?.subActivities?.tasks;
     return subActivitiesStore.subActivities;
 })
+
+watch(listDraggble.value, (newValue, oldValue)=>{
+    if(newValue){
+        listDraggble.value
+    }
+})
+
 
 const getSuccess = computed(()=>{
     if(subActivitiesStore?.createResponse?.message === 'create'){
@@ -241,7 +268,6 @@ const onUpdateSubActivity = (data) =>{
 }
 
 const onDeleteSubActivity = (data) =>{
-
     Swal.fire({
         icon: "warning",
         text: `Are you sure want delete this activity ${data.title}?`,
@@ -256,6 +282,14 @@ const onDeleteSubActivity = (data) =>{
         }
     })
 }
+
+function onEnd($event) {
+    const payload ={
+        tasks: listDraggble.value
+    }
+    emit('sendNewListTask', payload)
+}
+
 </script>
 
 <style scoped>
