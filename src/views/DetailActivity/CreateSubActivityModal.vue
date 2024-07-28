@@ -191,9 +191,11 @@
 <script setup>
 import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
 import { useSubActivitiesStore } from '@/stores/subActivityStore';
+import { useRouter } from 'vue-router';
 import '@/css/bullet-priority.css'
 
 const subActivitiesStore = useSubActivitiesStore()
+const router = useRouter();
 const nameSubActivity = ref('');
 const isOptionsExpanded = ref(false);
 const selectedOption = ref(1);
@@ -244,6 +246,10 @@ const props = defineProps({
     id: {
         type: String,
         default: ''
+    },
+    idSubActivity: {
+        type: String,
+        default: ''
     }
 })
 
@@ -253,10 +259,20 @@ const emit = defineEmits([
     'isOpenModelCloseGeneral',
 ]);
 
+const getDetailSubActivity = computed(()=>{
+    return subActivitiesStore.detailResponse
+})
+
+watch(getDetailSubActivity,(newValue, oldValue)=>{
+    if(newValue){
+        nameSubActivity.value = newValue?.title
+        selectedOption.value = newValue?.priority
+    }
+})
+
 function onToggle(data) {
     if(data){
         if(props.nameModal === 'create_form'){
-            console.log("Create form")
             const payload = {
                 "activity_id": props?.id,
                 "title": nameSubActivity.value,
@@ -265,7 +281,13 @@ function onToggle(data) {
             }
             subActivitiesStore.subActivitiesCreate(payload)
         } else {
-            console.log("edit form")
+            const payload = {
+                "title": nameSubActivity.value,
+                "is_active": getDetailSubActivity?.is_active,
+                "priority": selectedOption.value,
+                "order": getDetailSubActivity?.order
+            }
+            subActivitiesStore.subActivitiesEdit(props?.idSubActivity, payload)
         }
     }
     const payload = {

@@ -20,7 +20,12 @@
                             </span>
                         </template>
                         <template v-if="!isDraggble">
-                            <input @change="onUpdateSubActivity(item.id)" id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <input 
+                                @change="onUpdateSubActivity(item)" 
+                                :value="item?.is_active"
+                                id="default-checkbox" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                :checked="!item?.is_active"
+                                >
                         </template>
                     </div>
                     <div class="w-full flex items-center mr-1.5 overflow-text z-0">
@@ -142,6 +147,8 @@ const getSuccess = computed(()=>{
         return subActivitiesStore?.createResponse
     } else if (subActivitiesStore?.deleteResponse?.message === 'delete') {
         return subActivitiesStore?.deleteResponse
+    } else if (subActivitiesStore?.updateResponse?.message === 'update') {
+        return subActivitiesStore?.updateResponse
     } 
 })
 
@@ -187,8 +194,8 @@ const onCreateSubActivity = () =>{
     const isOpenModalGlobal = true;
     const nameModal ='create_form';
     const responseModalGlobal = {
-        title: 'Delete Data',
-        message: 'Are you sure want delete this data ?'
+        title: 'Create Form',
+        message: ''
     }
 
     const payload = {
@@ -200,22 +207,41 @@ const onCreateSubActivity = () =>{
     formDataModalStore.onActivatedModal(payload)
 }
 
-const isOpenModelCloseServer = (event) =>{
-    formDataModalStore.onDeactivatedModal()
-}
-
 const onEditSubActivity = (id) => {
-    console.log("id edit sub acitivity = ")
-    console.log(id)
+    const isOpenModalGlobal = true;
+    const nameModal ='edit_form';
+    const responseModalGlobal = {
+        title: 'Edit Form',
+        message: ''
+    }
+
+    const payload = {
+        'isOpenModalGlobal': isOpenModalGlobal,
+        'nameModal': nameModal,
+        'responseModalGlobal': responseModalGlobal,
+        'id':id
+    }
+
+    formDataModalStore.onActivatedModal(payload);
+    subActivitiesStore.subActivitiesDetail(id)
 }
 
-const onUpdateSubActivity = () =>{
-    console.log("finsih onUpdateSubActivity")
+const onUpdateSubActivity = (data) =>{
+    let isActive = data?.is_active;
+    isActive = !isActive;
+
+    const payload = {
+        "title": data?.title,
+        "is_active": isActive,
+        "priority": data?.priority,
+        "order": data?.order
+    }
+
+    subActivitiesStore.subActivitiesEdit(data?.id, payload)
 }
 
 const onDeleteSubActivity = (data) =>{
-    // console.log("onDeleteSubActivity = ")
-    // console.log(onDeleteSubActivity)
+
     Swal.fire({
         icon: "warning",
         text: `Are you sure want delete this activity ${data.title}?`,

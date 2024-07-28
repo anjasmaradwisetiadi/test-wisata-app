@@ -227,6 +227,7 @@
         :responseModal="getResponseModalGlobal" 
         :loading="getLoadingSubActivity"
         :id="idActivity"
+        :idSubActivity = "getIdSubActivity"
     >
     </CreateSubActivityModal>
     <!-- ******* display loading, success ,error, activity  -->
@@ -310,8 +311,16 @@ const getNameModal = computed(()=>{
 const getResponseModalGlobal = computed(()=>{
     return formDataModalStore.responseModalGlobal
 })
+const getIdSubActivity = computed(()=>{
+    return formDataModalStore.idData;
+})
 
-watchEffect(() => getIsOpenModalGlobal, getNameModal, getResponseModalGlobal, { immediate: true })
+watchEffect(() => 
+    getIsOpenModalGlobal, 
+    getNameModal, 
+    getResponseModalGlobal, 
+    getIdSubActivity,
+ { immediate: true })
 
 // ********* get sub-activity response 
 const getLoadingSubActivities = computed(()=>{
@@ -326,11 +335,11 @@ const getErrorSubActivities = computed(()=>{
 
 const getSuccessSubActivities = computed(()=>{
     if(subActivitiesStore?.createResponse?.message === 'create'){
-        console.log("trigger activity create")
         return subActivitiesStore?.createResponse
     } else if (subActivitiesStore?.deleteResponse?.message === 'delete') {
-        console.log("trigger activity delete")
         return subActivitiesStore?.deleteResponse
+    } else if (subActivitiesStore?.updateResponse?.message === 'update'){
+        return subActivitiesStore?.updateResponse
     }
 })
 

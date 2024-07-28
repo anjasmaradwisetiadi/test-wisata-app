@@ -52,7 +52,7 @@ export const useSubActivitiesStore = defineStore('subActivities', {
         this.loading = true;
         await instanceAxios.get(`tasks/${id}`)
             .then((response)=>{
-                this.detailResponse = response.data.data
+                this.detailResponse = response.data
                 this.loading = false;
             })
             .catch((error)=>{
