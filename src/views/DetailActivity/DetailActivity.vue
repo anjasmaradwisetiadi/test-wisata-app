@@ -133,7 +133,7 @@
                                 </li>
                                 <li
                                     class="px-3 py-2 transition-colors duration-300 hover:bg-gray-200"
-                                    @mousedown.prevent="setOption('AToZ')"
+                                    @mousedown.prevent="setOption('atoz')"
                                 >
                                     <div class="flex justify-center items-center">
                                         <div class="w-3/12 px-3 flex justify-center items-center">
@@ -144,7 +144,7 @@
                                         </div>
                                         <div class="w-3/12 text-right">
                                             <template
-                                                v-if="selectOption === 'AToZ'"
+                                                v-if="selectOption === 'atoz'"
                                             >
                                                 <span class="material-icons-outlined md:text-2xl lg:text-2xl text-lg">
                                                     done
@@ -155,7 +155,7 @@
                                 </li>
                                 <li
                                     class="px-3 py-2 transition-colors duration-300 hover:bg-gray-200"
-                                    @mousedown.prevent="setOption('ZToA')"
+                                    @mousedown.prevent="setOption('ztoa')"
                                 >
                                     <div class="flex justify-center items-center">
                                         <div class="w-3/12 px-3 flex justify-center items-center">
@@ -166,7 +166,7 @@
                                         </div>
                                         <div class="w-3/12 text-right">
                                             <template
-                                                v-if="selectOption === 'ZToA'"
+                                                v-if="selectOption === 'ztoa'"
                                             >
                                                 <span class="material-icons-outlined md:text-2xl lg:text-2xl text-lg">
                                                     done
@@ -177,7 +177,7 @@
                                 </li>
                                 <li
                                     class="px-3 py-2 transition-colors duration-300 hover:bg-gray-200"
-                                    @mousedown.prevent="setOption('NotDone')"
+                                    @mousedown.prevent="setOption('notdone')"
                                 >
                                     <div class="flex justify-center items-center">
                                         <div class="w-3/12 px-3 flex justify-center items-center">
@@ -188,7 +188,26 @@
                                         </div>
                                         <div class="w-3/12 text-right">
                                             <template
-                                                v-if="selectOption === 'NotDone'"
+                                                v-if="selectOption === 'notdone'"
+                                            >
+                                                <span class="material-icons-outlined md:text-2xl lg:text-2xl text-lg">
+                                                    done
+                                                </span>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li
+                                    class="px-3 py-2 transition-colors duration-300 hover:bg-gray-600 bg-gray-200"
+                                    @mousedown.prevent="setOption('reset')"
+                                >
+                                    <div class="flex justify-center items-center">
+                                        <div class="w-9/12 flex text-center justify-center font-semibold">
+                                            Reset
+                                        </div>
+                                        <div class="w-3/12 text-right">
+                                            <template
+                                                v-if="selectOption === 'reset'"
                                             >
                                                 <span class="material-icons-outlined md:text-2xl lg:text-2xl text-lg">
                                                     done
@@ -379,8 +398,24 @@ const onUpdateActivity = (data) =>{
 }
 
 const setOption = (option) => {
+    const routeId = router.currentRoute.value.params.id;
     selectOption.value = option;
     isOptionsExpanded.value = false;
+    let filterFormat = '';
+    if(option === 'newest'){
+        filterFormat = '&is_newest=true'
+    } else if(option === 'oldest'){
+        filterFormat = '&is_newest=false'
+    } else if(option === 'atoz'){
+        filterFormat = '&is_ascending=true'
+    } else if(option === 'ztoa'){
+        filterFormat = '&is_ascending=false'
+    } else if (option === 'notdone'){
+        filterFormat = '&is_active=true'
+    } else {
+        filterFormat = ''
+    }
+    subActivitiesStore.subActivitiesListFilter( routeId, filterFormat)
 }
 
 const onCreateSubActivity = () => {

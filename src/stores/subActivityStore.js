@@ -30,6 +30,21 @@ export const useSubActivitiesStore = defineStore('subActivities', {
                 this.loading = false;
             })
     },
+    async subActivitiesListFilter(id, payload) {
+      this.loading = true;
+      this.resetState()
+      await instanceAxios.get(`tasks?activity_id=${id}${payload}`)
+          .then((response)=>{
+              this.subActivities = response.data
+              this.loading = false;
+          })
+          .catch((error)=>{
+              console.log("error = ")
+              console.log(error)
+              this.errorResponse = true
+              this.loading = false;
+          })
+   },
     async subActivitiesCreate(payload) {
         this.loading = true;
         await instanceAxios.post('tasks', payload)
