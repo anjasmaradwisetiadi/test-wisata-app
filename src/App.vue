@@ -16,11 +16,10 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted, onUpdated, onBeforeMount, computed} from 'vue';
+import { ref, watch, onMounted, onUpdated, onBeforeMount, computed} from 'vue';
 import Navbar from '../src/components/Navbar.vue'
 import { useAuthStore } from './stores/authStore';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 
 const router = useRouter();
 const authStore = useAuthStore()

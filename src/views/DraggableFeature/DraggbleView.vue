@@ -65,11 +65,7 @@ const list = ref(
 
 function onSubmit(){
     let newResult = []
-    console.log("list = ")
-    console.log(list.value)
     list.value.forEach((item, index)=>{
-        console.log("item = ", index)
-        console.log(item)
         const payload = {
             name: item?.name,
             order: (index+1),
@@ -77,8 +73,6 @@ function onSubmit(){
         }
         newResult.push(payload)
     })
-    console.log("newResult submit = ")
-    console.log(newResult)
 }
 
 function onFilteringDefault(){
@@ -93,8 +87,6 @@ function onFilteringDefault(){
         return 0;
     })
 
-    console.log("result = ")
-    console.log(result)
     result.forEach((item, index)=>{
         const payload = {
             name: item?.name,
@@ -103,9 +95,6 @@ function onFilteringDefault(){
         }
         newResult.push(payload)
     })
-
-    console.log("newResult filter defaullt = ")
-    console.log(newResult)
 }
 </script>
 

@@ -26,8 +26,6 @@ export const useAuthStore = defineStore('auth', {
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.loginResponse = error.response
                 this.loading = false;
             })
@@ -48,8 +46,6 @@ export const useAuthStore = defineStore('auth', {
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.logoutResponse = error.response
                 this.loading = false;
             })

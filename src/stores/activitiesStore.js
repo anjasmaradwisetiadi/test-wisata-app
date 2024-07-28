@@ -24,8 +24,6 @@ export const useActivitiesStore = defineStore('activities', {
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.errorResponse = true
                 this.loading = false;
             })
@@ -42,8 +40,6 @@ export const useActivitiesStore = defineStore('activities', {
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.errorResponse = true
                 this.loading = false;
             })
@@ -56,8 +52,6 @@ export const useActivitiesStore = defineStore('activities', {
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.errorResponse = true
                 this.loading = false;
             })
@@ -74,8 +68,6 @@ export const useActivitiesStore = defineStore('activities', {
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.loading = false;
             })
     },
@@ -92,8 +84,6 @@ export const useActivitiesStore = defineStore('activities', {
                 this.loading = false;
             })
             .catch((error)=>{
-                console.log("error = ")
-                console.log(error)
                 this.errorResponse = true;
                 this.loading = false;
             })

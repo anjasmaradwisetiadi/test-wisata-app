@@ -56,9 +56,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { activity_dummy_data } from '@/utilize/DataDummy';
 import { utilize } from '@/utilize/index'
 import { useActivitiesStore } from '@/stores/activitiesStore';
 import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
@@ -67,12 +66,6 @@ import Swal from 'sweetalert2';
 const router = useRouter();
 const activitiesStore = useActivitiesStore()
 
-const isOpenModalGlobal = ref(false);
-const nameModalButtonGlobal = ref('Yes');
-const nameModal = ref('delete_activity');
-const isConfirmModal = ref(false);
-const responseModalGlobal = ref(null);
-const isConfirmModalGlobal = ref(false);
 const page = ref(0);
 const limit = ref(0);
 const search = ref('');
@@ -125,13 +118,6 @@ function paginate(pageParam=1, limitParam=8, searchParam=''){
     return payloadPage
 }
 
-function isOpenModelCloseServer (event) {
-    isConfirmModal.value = false;
-    isOpenModalGlobal.value = false;
-    responseModalGlobal.value = null;
-    isConfirmModalGlobal.value = false;
-}
-
 const onDelete = (data) => {
     Swal.fire({
         icon: "warning",
@@ -157,7 +143,6 @@ const onCreateActivity = () => {
 }
 
 const onDetail = (data) =>{
-    // router.push(`activity/detail/${data?.id}`)
     
     //********** */  it neeed BE fixing update data
     if(data?.type === "activity_task"){
