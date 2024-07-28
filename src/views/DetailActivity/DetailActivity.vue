@@ -4,7 +4,7 @@
         class="flex justify-center min-h-screen "
     >
         <div class="relative overflow-y-auto overflow-x-hidden z-1 container">
-            <div class="flex flex-row flex-wrap fixed justify-between px-4 container bg-gray-50 dark:bg-gray-900 mt-24 lg:mt-24 py-3 lg:pt-10 ">
+            <div class="flex flex-row flex-wrap fixed justify-between px-4 container bg-gray-50 dark:bg-gray-900 mt-24 lg:mt-24 py-3 lg:pt-10 z-10">
                 <div class="flex items-center mb-4 lg:mb-0">
                     <span class="lg:text-3xl md:text-3xl text-xl cursor-pointer material-icons-outlined pr-3"
                         @click="onBack()"
@@ -236,7 +236,7 @@
         :responseSwalSuccess="getSuccessActivity"
     >
     </LoadingAndAlert>
-        <!-- ******* display loading, success ,error, sub-activity  -->
+    <!-- ******* display loading, success ,error, sub-activity  -->
     <LoadingAndAlert
         :loading="getLoadingSubActivities"
         :responseSwalError="getErrorSubActivities"
@@ -325,10 +325,16 @@ const getErrorSubActivities = computed(()=>{
 })
 
 const getSuccessSubActivities = computed(()=>{
-    if(subActivitiesStore?.updateResponse?.message === 'create'){
-        return subActivitiesStore?.updateResponse
-    } 
+    if(subActivitiesStore?.createResponse?.message === 'create'){
+        console.log("trigger activity create")
+        return subActivitiesStore?.createResponse
+    } else if (subActivitiesStore?.deleteResponse?.message === 'delete') {
+        console.log("trigger activity delete")
+        return subActivitiesStore?.deleteResponse
+    }
 })
+
+watchEffect(() => getSuccessSubActivities, { immediate: true })
 
 
 const getActivityParent = () =>{
@@ -386,6 +392,7 @@ const onCreateSubActivity = () => {
 }
 
 const isOpenModelCloseServer = (event) =>{
+    // getSubActivity()
     formDataModalStore.onDeactivatedModal()
 }
 

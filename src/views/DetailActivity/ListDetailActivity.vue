@@ -1,14 +1,14 @@
 <template>
     <div id="ListDetailActivity" class="flex flex-row flex-wrap justify-center mt-32 lg:mt-32 pt-28 lg:pt-28">
-        <template v-if="!getLoading && !getSubActivities?.data?.length">
+        <template v-if="!getLoading && !getSubActivities?.tasks?.length">
             <img 
                 @click="onCreateSubActivity()"
                 class="w-[92vw-10rem] cursor-pointer" src="@/assets/image/todo-empty-state.png" alt="image">
         </template>
-        <template v-if="!getLoading && getSubActivities?.data?.length">
+        <template v-if="!getLoading && getSubActivities?.tasks?.length">
             <div class="flex flex-col w-full">
                 <div
-                    v-for="(item, index) in getSubActivities?.data"
+                    v-for="(item, index) in getSubActivities?.tasks"
                     :key="index"
                     class="flex w-full shadow-lg px-3 py-6 mt-2 border border border-solid border-gray-200"
                 >
@@ -23,7 +23,7 @@
                             <input @change="onUpdateSubActivity(item.id)" id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         </template>
                     </div>
-                    <div class="w-full flex items-center mr-1.5 overflow-text">
+                    <div class="w-full flex items-center mr-1.5 overflow-text z-0">
                         <div class="flex w-8 items-center mr-0.5">
                             <template v-if="item.priority === 1">
                                 <span class="bullet-make bullet-color-red">
@@ -72,7 +72,7 @@
                         <div class="w-12 flex items-center align-center">
                             <span 
                                 class="material-icons-outlined text-gray-500 cursor-pointer text-3xl" style="line-height: 1rem;" 
-                                @click="onDeleteSubActivity(item?.id)"
+                                @click="onDeleteSubActivity(item)"
                             >
                                 delete
                             </span>
@@ -91,6 +91,7 @@ import { useActivitiesStore } from '@/stores/activitiesStore';
 import { useRouter } from 'vue-router';
 import { activity_detail_dummy_data } from '@/utilize/DataDummy';
 import { useFormDataModalStore } from '@/stores/formDataModalStore';
+import Swal from 'sweetalert2';
 
 import '@/css/bullet-priority.css'
 
@@ -134,6 +135,21 @@ watchEffect(() =>
 // ********** sub activity modal
 const getSubActivities = computed(()=>{
     return subActivitiesStore.subActivities;
+})
+
+const getSuccess = computed(()=>{
+    if(subActivitiesStore?.createResponse?.message === 'create'){
+        return subActivitiesStore?.createResponse
+    } else if (subActivitiesStore?.deleteResponse?.message === 'delete') {
+        return subActivitiesStore?.deleteResponse
+    } 
+})
+
+watch(getSuccess, (newValue, oldValue)=>{
+    if(newValue){
+        subActivity()
+        return getSubActivities
+    }
 })
 
 onMounted(()=>{
@@ -197,8 +213,22 @@ const onUpdateSubActivity = () =>{
     console.log("finsih onUpdateSubActivity")
 }
 
-const onDeleteSubActivity = () =>{
-    console.log("finsih onDeleteSubActivity")
+const onDeleteSubActivity = (data) =>{
+    // console.log("onDeleteSubActivity = ")
+    // console.log(onDeleteSubActivity)
+    Swal.fire({
+        icon: "warning",
+        text: `Are you sure want delete this activity ${data.title}?`,
+        title: "Delete Sub-Activity",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result)=>{
+        if (result.isConfirmed) {
+            subActivitiesStore.subActivitiesDelete(data?.id)
+        }
+    })
 }
 </script>
 

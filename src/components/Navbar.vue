@@ -11,7 +11,7 @@
     </div>
     <div id="Navbar">
         <transition name="fade">
-            <div class="w-screen flex justify-center title text-center pb-3 pt-4 mb-8 px-3 z-10 fixed bg-sky-400 shadow-lg">
+            <div class="w-screen flex justify-center title text-center pb-3 pt-4 mb-8 px-3 z-20 fixed bg-sky-400 shadow-lg">
                 <div class="container flex flex-row justify-between">
                     <div class="w-1/2 flex justify-start cursor-pointer" @click="goBack()">
                         <h3 class="lg:text-4xl md:text-4xl text-xl text-white font-bold py-5">App Todo List</h3>
