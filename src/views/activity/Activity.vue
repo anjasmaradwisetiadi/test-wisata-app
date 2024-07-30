@@ -55,8 +55,8 @@
                             </div>
                     </div>
                 </div>
-                <div class="flex w-full justify-start shadow-lg px-2">
-                    <div class="flex border items-center border-solid border-gray-300 w-full px-4 py-3 my-8">
+                <div class="flex w-full justify-start px-2">
+                    <div class="flex border items-center border-solid border-gray-300 w-full px-4 py-3 my-8 shadow-lg">
                         <button 
                             class="mr-2 cursor-pointer bg-sky-400 hover:bg-sky-600 rounded-lg px-3 py-1 border border-gray-500 disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed" 
                             @click="prevPage()"
