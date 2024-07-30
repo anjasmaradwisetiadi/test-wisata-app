@@ -15,14 +15,14 @@
                         <h1 class="lg:text-3xl md:text-3xl text-xl cursor-pointer"> {{getDetailResponseActivity?.title}}</h1>
                     </template>
                     <template v-if="isActivityEdit">
-                        <div >   
+                        <div class="w-full border-b-2 border-black">   
                             <input
                                 v-model="activityName"
                                 id="name"
                                 name="name"
                                 type="text"
                                 required
-                                class="block w-full rounded-md border border-gray-400 py-2 text-gray-900 ring-0 focus:ring-0 placeholder:text-gray-400 sm:text-sm sm:leading-6 pl-[8px]"
+                                class="block w-full rounded-md border-none border-bottom bg-gray-50 focus:outline-none focus:ring-0 text-xl lg:text-3xl py-2 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 pl-[8px]"
                                 placeholder="Schedule Name"
                                 />
                         </div>
