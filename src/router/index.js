@@ -28,9 +28,15 @@ const router = createRouter({
       meta: {requiresAuth: true}
     },
     {
-      path: '/activity/detail/:id',
+      path: '/activity/activity-task/:id',
       name: 'activity-detail',
       component: () => import('../views/DetailActivity/DetailActivity.vue'),
+      meta: {requiresAuth: true}
+    },
+    {
+      path: '/activity/activity-text/:id',
+      name: 'activity-text',
+      component: () => import('../views/ActivityText/ActivityText.vue'),
       meta: {requiresAuth: true}
     },
     // {

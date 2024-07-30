@@ -1,0 +1,27 @@
+.information-html h1{
+    font-size: 2em;
+}
+.information-html h2{
+    font-size: 1.5em;
+}
+.information-html h3{
+    font-size: 1.15em;
+}
+.information-html ol {
+    list-style: number;
+    margin: 0;
+    padding: 0 1rem;
+}
+.information-html ul {
+    list-style: disc;
+    margin: 0;
+    padding: 0 1rem;
+}
+.information-html a{
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.information-html p.default-text{
+    color: rgb(209 213 219);
+}
