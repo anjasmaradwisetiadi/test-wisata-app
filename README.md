@@ -1,7 +1,8 @@
 # Payment-PCS
 
 This template should help get you started developing with Vue 3 in Vite.
-youcan look for review app on thi link [pcs-mobile-app](https://landing-page-54d28.web.app/)  
+youcan look for review app on thi link [wisata-app](https://angular-guidance.web.app/)  
+
 first time consume original base url => https://landing-page-54d28.web.app/
 
 ## Recommended IDE Setup
