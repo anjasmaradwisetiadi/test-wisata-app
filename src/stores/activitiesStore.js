@@ -17,11 +17,12 @@ export const useActivitiesStore = defineStore('activities', {
   actions:{
     async activitiesList(payload) {
         this.loading = true;
-        this.resetState()
+
         await instanceAxios.get(`activities?page=${payload.page}&limit=${payload.limit}`)
             .then((response)=>{
                 this.activities = response.data
                 this.loading = false;
+                this.resetState()
             })
             .catch((error)=>{
                 this.errorResponse = true
@@ -50,6 +51,7 @@ export const useActivitiesStore = defineStore('activities', {
             .then((response)=>{
                 this.detailResponse = response.data.data
                 this.loading = false;
+                this.resetState()
             })
             .catch((error)=>{
                 this.errorResponse = true
@@ -91,7 +93,6 @@ export const useActivitiesStore = defineStore('activities', {
 
     async resetState() {
         this.createResponse= null;
-        this.detailResponse= null;
         this.updateResponse= null;
         this.deleteResponse= null;
     }

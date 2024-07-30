@@ -19,12 +19,12 @@ export const useSubActivitiesStore = defineStore('subActivities', {
   actions:{
     async subActivitiesList(id) {
         this.loading = true;
-        this.resetState()
         await instanceAxios.get(`tasks?activity_id=${id}`)
             .then((response)=>{
                 this.subActivities = this.orderingDefaultList(response.data);
                 this.subActivitiesTask = this.subActivities?.tasks
                 this.loading = false;
+                this.resetState();
             })
             .catch((error)=>{
                 this.errorResponse = true
@@ -33,12 +33,12 @@ export const useSubActivitiesStore = defineStore('subActivities', {
     },
     async subActivitiesListFilter(id, payload) {
       this.loading = true;
-      this.resetState()
       await instanceAxios.get(`tasks?activity_id=${id}${payload}`)
           .then((response)=>{
               this.subActivities = this.orderingByFiltering(response.data);
               this.subActivitiesTask = this.subActivities?.tasks
               this.loading = false;
+              this.resetState();
           })
           .catch((error)=>{
               this.errorResponse = true

@@ -30,7 +30,7 @@
                     <template v-if="!isActivityEdit">
                         <span 
                             v-if="selectOption !== 'notdone'"
-                            class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
+                            class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-4 cursor-pointer" 
                             @click="editActivity(getDetailResponseActivity)"
                         >
                             edit
@@ -38,12 +38,12 @@
                     </template>
                     <template v-if="isActivityEdit">
                         <span
-                            class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-5 cursor-pointer" 
+                            class="lg:text-3xl md:text-3xl text-xl text-stone-400 font-bold material-icons-outlined pl-4 cursor-pointer" 
                             @click="onUpdateActivity(getDetailResponseActivity)"
                         >
                             done
                         </span>
-                </template>
+                    </template>
                 </div>
                 <div class="flex flex-row sm:justify-between sm:pt-3 w-full lg:w-auto">
                     <div class="flex">
@@ -320,9 +320,12 @@ const getDetailResponseActivity = computed(()=>{
 
 const getSuccessActivity = computed(()=>{
     if(activitiesStore?.updateResponse?.message === 'update'){
+        getActivityParent();
         return activitiesStore?.updateResponse
     } 
 })
+
+watchEffect(() => getSuccessActivity, { immediate: true })
 
 //********** */ form modal data trigger response 
 const getIsOpenModalGlobal = computed(()=>{
@@ -374,14 +377,6 @@ const getActivityParent = () =>{
     idActivity.value = payloadSlug
     activitiesStore.activitiesDetail(payloadSlug);
 }
-
-watch(getSuccessActivity, (newValue, oldValue) => {
-    if(newValue){
-        getActivityParent()
-        return getSuccessActivity
-    }
-},{ immediate: true })
-
 
 onMounted(()=>{
     getActivityParent();
@@ -477,7 +472,6 @@ const getNewListTask = ($event) =>{
 
 const onBack = () => {
     router.push(`/`)
-
 }
 </script>
 

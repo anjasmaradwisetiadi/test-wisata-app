@@ -58,7 +58,6 @@
         @isOpenModelCloseGeneral="isOpenModelCloseServer"
         :responseModal="getResponseModalGlobal" 
     >
-
     </CreateActivityModal>
 </template>
 
@@ -96,8 +95,10 @@ const getError = computed(()=>{
 
 const getSuccess = computed(()=>{
     if(activitiesStore?.createResponse?.message === 'create'){
+        activitiesStore.activitiesList(paginate())
         return activitiesStore?.createResponse
     } else if (activitiesStore?.deleteResponse?.message === 'delete') {
+        activitiesStore.activitiesList(paginate())
         return activitiesStore?.deleteResponse
     } 
 })
@@ -123,12 +124,8 @@ watchEffect(() =>
     getIdSubActivity,
  { immediate: true })
 
-watch(getSuccess, (newValue, oldValue) => {
-    if(newValue){
-        activitiesStore.activitiesList(paginate())
-        return getSuccess
-    }
-},{ immediate: true })
+watchEffect(()=>getSuccess, {immediate: true})
+
 
 onMounted(()=>{
     activitiesStore.activitiesList(paginate())

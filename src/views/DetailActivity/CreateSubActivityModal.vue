@@ -265,6 +265,11 @@ const resetState = () =>{
 
 function onToggle(data) {
     const resultValidity = checkValidty();
+    const payload = {
+        name: props.nameModal,
+        value: data
+    }
+
     if(data){
         if(!resultValidity){
             if(props.nameModal === 'create_form'){
@@ -286,15 +291,13 @@ function onToggle(data) {
             }
 
             resetState()
-            const payload = {
-                name: props.nameModal,
-                value: data
-            }
-
             emit('isOpenModelCloseGeneral', payload)
         } else {
             errorHandle.errorMessage('Please fill required input')
         }
+    } else {
+        resetState()
+        emit('isOpenModelCloseGeneral', payload)
     }
 }
 
