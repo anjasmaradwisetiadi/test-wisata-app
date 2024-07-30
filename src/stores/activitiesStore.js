@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
 import instanceAxios from '@/utilize/instanceAxios'
+import { useSubActivitiesTextStore } from './subActivityTextStore'
+
+const subActivitiesTextStore =  useSubActivitiesTextStore()
 
 export const useActivitiesStore = defineStore('activities', {
   state : () =>{
@@ -45,11 +48,18 @@ export const useActivitiesStore = defineStore('activities', {
                 this.loading = false;
             })
     },
-    async activitiesDetail(id) {
+    async activitiesDetail(id, type="activity_task") {
         this.loading = true;
         await instanceAxios.get(`activities/${id}`)
             .then((response)=>{
                 this.detailResponse = response.data.data
+                if(type === 'activity_text'){
+                    const payloadCreateTextTask = {
+                        activity_id: response.data?.data?.id,
+                        text: `<p class="default-text">Fill your note....</p>`
+                    }
+                    subActivitiesTextStore.subActivitiesTextCreate(payloadCreateTextTask)
+                }
                 this.loading = false;
                 this.resetState()
             })

@@ -184,12 +184,10 @@ const onCreateActivity = () => {
 
 const onDetail = (data) =>{
     
-    //********** */  it neeed BE fixing update data
     if(data?.type === "activity_task"){
         router.push(`activity/activity-task/${data?.id}`)
     } else {
         // it need add testing route etxt
-        console.log("lainnya text")
         router.push(`activity/activity-text/${data?.id}`)
     }
 }

@@ -73,7 +73,7 @@
                         <label for="inputBody">Note: </label>
                         <div class="bg-white shadow-lg lg:p-8 p-4 border border-gray-300 rounded-lg">
                             <div class="card-body">
-                                <div class="information-html" v-html="information"></div>
+                                <div class="information-html" v-html="note"></div>
                             </div>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                         <label for="inputBody">Note: </label>
                         <quill-editor 
                             id="inputBody" 
-                            v-model:content="information" 
+                            v-model:content="note" 
                             content-type="html" 
                             placeholder="Write your information....">
                         </quill-editor>
@@ -97,7 +97,7 @@
     </div>
     <!-- ******* display loading, success ,error, activity  -->
     <LoadingAndAlert
-        :loading="getLoadingActivity"
+        :loading="getLoadingActivity || getLoadingSubActivityText"
         :responseSwalError="getErrorActivity"
         :responseSwalSuccess="getSuccessActivity"
     >
@@ -109,15 +109,17 @@ import { ref, reactive, watch, computed, onMounted, onBeforeMount, watchEffect }
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import { QuillEditor } from '@vueup/vue-quill'
 import { useActivitiesStore } from '@/stores/activitiesStore';
+import { useSubActivitiesTextStore } from '@/stores/subActivityTextStore';
 import { useRouter } from 'vue-router';
 import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
 import '@/css/format-text.css'
 
 const router = useRouter();
 const activitiesStore = useActivitiesStore()
+const subActivitiesTextStore = useSubActivitiesTextStore()
 
-const textDefault = `<p class="default-text">Fill your text....</p>`
-const information = ref(textDefault);
+const textDefault = `<p class="default-text">Fill your note empty....</p>`
+const note = ref(textDefault);
 const isActivityEdit = ref(false);
 const activityName = ref('');
 const idActivity = ref('');
@@ -134,6 +136,9 @@ const getErrorActivity = computed(()=>{
 })
 
 const getDetailResponseActivity = computed(()=>{
+    if(activitiesStore.detailResponse){
+        getSubActivityText(activitiesStore?.detailResponse?.id)
+    }
     return activitiesStore.detailResponse;
 })
 
@@ -144,19 +149,34 @@ const getSuccessActivity = computed(()=>{
     } 
 })
 
+//********** */ get sub activity text response 
+const getLoadingSubActivityText = computed(()=>{
+    return subActivitiesTextStore.loading;
+})
+
+const getSubActivitiesText = computed(()=>{
+    note.value = subActivitiesTextStore?.subActivitiesText ? subActivitiesTextStore?.subActivitiesText[0]?.text : null
+    return subActivitiesTextStore?.subActivitiesText;
+})
+
 onMounted(()=>{
     // ******** trigger data get activity detail
     getActivityParent();
 })
 
 watchEffect(() => getSuccessActivity, { immediate: true })
+watchEffect(getSubActivitiesText,  { immediate: true })
 
 const getActivityParent = () =>{
     const payloadSlug = router.currentRoute.value.params.id;
     idActivity.value = payloadSlug
-    activitiesStore.activitiesDetail(payloadSlug);
+    const positionSubActivity = 'activity_text'
+    activitiesStore.activitiesDetail(payloadSlug, positionSubActivity);
 }
 
+const getSubActivityText = (id) =>{
+    subActivitiesTextStore.subActivitiesTextList(id)
+}
 
 const editActivity = (data) => {
     isActivityEdit.value = true
