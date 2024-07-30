@@ -118,7 +118,7 @@ const router = useRouter();
 const activitiesStore = useActivitiesStore()
 const subActivitiesTextStore = useSubActivitiesTextStore()
 
-const textDefault = `<p class="default-text">Fill your note empty....</p>`
+const textDefault = `<p class="default-text">Fill your note empty ....</p>`
 const note = ref(textDefault);
 const isActivityEdit = ref(false);
 const activityName = ref('');
@@ -136,7 +136,7 @@ const getErrorActivity = computed(()=>{
 })
 
 const getDetailResponseActivity = computed(()=>{
-    if(activitiesStore.detailResponse){
+    if(activitiesStore.detailResponse && createResponse){
         getSubActivityText(activitiesStore?.detailResponse?.id)
     }
     return activitiesStore.detailResponse;
@@ -154,8 +154,16 @@ const getLoadingSubActivityText = computed(()=>{
     return subActivitiesTextStore.loading;
 })
 
+const getDetailResponseSubActivityText = computed(()=>{
+    return subActivitiesTextStore.subActivitiesText;
+})
+
+const createResponse = computed( ()=>{
+    return subActivitiesTextStore?.createResponse;
+})
+
+//****** */ it need checking for close
 const getSubActivitiesText = computed(()=>{
-    note.value = subActivitiesTextStore?.subActivitiesText ? subActivitiesTextStore?.subActivitiesText[0]?.text : null
     return subActivitiesTextStore?.subActivitiesText;
 })
 
@@ -165,14 +173,23 @@ onMounted(()=>{
 })
 
 watchEffect(() => getSuccessActivity, { immediate: true })
-watchEffect(getSubActivitiesText,  { immediate: true })
+watchEffect(createResponse, { immediate: true })
+watchEffect(getSubActivitiesText, { immediate: true })
 
 const getActivityParent = () =>{
     const payloadSlug = router.currentRoute.value.params.id;
     idActivity.value = payloadSlug
     const positionSubActivity = 'activity_text'
+    subActivitiesTextStore.subActivitiesTextList(payloadSlug);
     activitiesStore.activitiesDetail(payloadSlug, positionSubActivity);
 }
+
+watch(getDetailResponseSubActivityText, (newValue, oldValue)=>{
+    if(newValue){
+        note.value = newValue?.texts?.length ? newValue?.texts[0]?.text : `<p class="default-text">Fill your note ....</p>`;
+        return newValue
+    }
+})
 
 const getSubActivityText = (id) =>{
     subActivitiesTextStore.subActivitiesTextList(id)

@@ -30,11 +30,12 @@ export const useSubActivitiesTextStore = defineStore('subActivitiesText', {
             })
     },
 
+    // need delete thi data not used
     async subActivitiesTextCreate(payload) {
         this.loading = true;
             instanceAxios.get(`texts?activity_id=${payload.activity_id}`)
             .then((response)=>{
-                isHaveList = response?.data?.texts?.length
+                const isHaveList = response?.data?.texts?.length
                 if(!isHaveList){
                     instanceAxios.post('text', payload)
                     .then((response)=>{
@@ -61,18 +62,18 @@ export const useSubActivitiesTextStore = defineStore('subActivitiesText', {
             })
 
     },
-    async subActivitiesTextDetail(id) {
-        this.loading = true;
-        await instanceAxios.get(`text/${id}`)
-            .then((response)=>{
-                this.detailResponse = response.data.text
-                this.loading = false;
-            })
-            .catch((error)=>{
-                this.errorResponse = true
-                this.loading = false;
-            })
-    },
+    // async subActivitiesTextDetail(id) {
+    //     this.loading = true;
+    //     await instanceAxios.get(`text/${id}`)
+    //         .then((response)=>{
+    //             this.detailResponse = response.data.text
+    //             this.loading = false;
+    //         })
+    //         .catch((error)=>{
+    //             this.errorResponse = true
+    //             this.loading = false;
+    //         })
+    // },
 
     async subActivitiesTextEdit(id, payload) {
         this.loading = true;
