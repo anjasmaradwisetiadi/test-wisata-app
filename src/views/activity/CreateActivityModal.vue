@@ -1,5 +1,5 @@
 <template>
-    <div id="CreateSubActivityComponent">
+    <div id="CreateActivityComponent">
         <div 
             v-if=" props?.isOpenModal" 
             id="modal-bg" class="w-full h-full z-20 fixed top-0 blur-background overflow-hidden">
@@ -11,13 +11,13 @@
             <img src="../assets/animated/spinner.svg" alt="spinner">
         </div>
         <transition
-            v-if="props?.isOpenModal && !props?.loading"  name="fade"
+            v-if="props?.isOpenModal"  name="fade"
         >
             <div
                 id="modal-box" 
                 class="w-[385px] min-w-[30vw] lg:w-[385px] lg:min-w-[30vw] lg:min-h-[20vh] flex flex-col items-center gap-2 -translate-y-1/2 bg-white rounded-lg top-1/2 left-1/2 -translate-x-1/2 shadow-md z-20 border border-solid border-gray-200 fixed"
             >
-                <div class="flex w-full justify-between py-6 px-6 border-b border-gray-400">
+                <header class="flex w-full justify-between py-6 px-6 border-b border-gray-400">
                     <div>
                         <h2 class="text-xl text-blue-primary font-medium mt-2">{{props?.responseModal?.title}} </h2>
                     </div>
@@ -26,30 +26,28 @@
                             close
                         </span>
                     </div>
-                </div>
-                <div class="w-full px-6 py-3">
+                </header>
+                <main class="w-full px-6 py-3">
                     <div class="flex flex-col">
-                        <div class="font-semibold">
-                            Name List Item
+                            <div class="font-semibold">
+                                Name Activity
+                            </div>
+                            <div>
+                                <input
+                                    v-model="nameActivity"
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    required
+                                    class="block w-full rounded-md border py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6 pl-[8px]"
+                                    placeholder="Activity name"
+                                />
+                                <small v-if="isNameError" class="form-text invalid-feedback">Pleasse fill this field</small>
+                            </div>
                         </div>
-                        <div>
-                            <input
-                                v-model="nameSubActivity"
-                                id="name"
-                                name="name"
-                                autocomplete="username"
-                                type="text"
-                                required
-                                class="block w-full rounded-md border py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6 pl-[8px]"
-                                placeholder="Schedule Name"
-                                :disabled="isEdit"
-                            />
-                            <small v-if="isNameSubActivityError" class="form-text invalid-feedback">Pleasse fill this field</small>
-                        </div>
-                    </div>
                     <div class="flex flex-col mt-2">
                         <div class="font-semibold">
-                            Priorty List Item
+                            Activity List Item
                         </div>
                         <div>
                             <div class="relative text-lg w-full">
@@ -59,18 +57,20 @@
                                     @blur="isOptionsExpanded = false"
                                 >
                                     <div class="flex items-center">
-                                        <template v-if="selectedOption === 1">
-                                            <span class="bullet-make bullet-color-red">
+                                        <template v-if="selectedOption === 'activity_task'">
+                                            <span class="material-icons-outlined mr-4">
+                                                checklist
                                             </span>
                                             <span>
-                                                Very High
+                                                Activity Task
                                             </span>
                                         </template>
-                                        <template v-if="selectedOption === 2">
-                                            <span class="bullet-make bullet-color-yellow">
+                                        <template v-if="selectedOption === 'activity_text'">
+                                            <span class="material-icons-outlined mr-4">
+                                                checklist
                                             </span>
                                             <span>
-                                                High
+                                                Activity Text
                                             </span>
                                         </template>
                                     </div>
@@ -108,36 +108,17 @@
                                             @mousedown.prevent="setOption(option.value)"
                                         >
                                             <div class="flex items-center">
-                                                <template v-if="option.value === 1">
-                                                    <span class="bullet-make bullet-color-red">
+                                                <template v-if="option.value === 'activity_task'">
+                                                    <span class="material-icons-outlined mr-4">
+                                                        checklist
                                                     </span>
                                                     <span>
                                                         {{ option?.key }}
                                                     </span>
                                                 </template>
-                                                <template v-if="option.value === 2">
-                                                    <span class="bullet-make bullet-color-yellow">
-                                                    </span>
-                                                    <span>
-                                                        {{ option?.key }}
-                                                    </span>
-                                                </template>
-                                                <template v-if="option.value === 3">
-                                                    <span class="bullet-make bullet-color-green">
-                                                    </span>
-                                                    <span>
-                                                        {{ option?.key }}
-                                                    </span>
-                                                </template>
-                                                <template v-if="option.value === 4">
-                                                    <span class="bullet-make bullet-color-blue">
-                                                    </span>
-                                                    <span>
-                                                        {{ option?.key }}
-                                                    </span>
-                                                </template>
-                                                <template v-if="option.value === 5">
-                                                    <span class="bullet-make bullet-color-purple">
+                                                <template v-if="option.value === 'activity_text'">
+                                                    <span class="material-icons-outlined mr-4">
+                                                        edit_note
                                                     </span>
                                                     <span>
                                                         {{ option?.key }}
@@ -150,8 +131,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="flex w-full justify-end px-6">
+                </main>
+                <footer class="flex w-full justify-end px-6">
                     <div class="flex ">
                         <button id="modal-close" class="py-2 px-6 bg-sky-400 rounded-lg text-white mb-7 mr-2"
                             @click="onToggle(true)"
@@ -162,7 +143,7 @@
                             @click="onToggle(false)"
                         > Cancel </button>
                     </div>
-                </div>
+                </footer>
             </div>
         </transition>
     </div>
@@ -171,37 +152,32 @@
 <script setup>
 import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
 import { useSubActivitiesStore } from '@/stores/subActivityStore';
-import { errorHandle } from '@/utilize/HandleError';
+import { useActivitiesStore } from '@/stores/activitiesStore';
 import { useRouter } from 'vue-router';
 import '@/css/bullet-priority.css'
+import { errorHandle } from '@/utilize/HandleError';
 
-const subActivitiesStore = useSubActivitiesStore()
 const router = useRouter();
+const subActivitiesStore = useSubActivitiesStore()
+const activitiesStore = useActivitiesStore();
+
+
 const nameSubActivity = ref('');
 const isOptionsExpanded = ref(false);
-const selectedOption = ref(1);
+const selectedOption = ref('activity_task');
 const isEdit= ref(false)
-const isNameSubActivityError = ref(false)
+const nameActivity = ref('');
+
+const isNameError = ref(false);
+
 const options = ref([
     {
-        key: 'Very High',
-        value: 1 
+        key: 'Activity Task',
+        value: 'activity_task' 
     },
     {
-        key: 'High',
-        value: 2 
-    },
-    {
-        key: 'Normal',
-        value: 3 
-    },
-    {
-        key: 'Low',
-        value: 4
-    },
-    {
-        key: 'Very Low',
-        value: 5 
+        key: 'Activity Text',
+        value: 'activity_text' 
     },
 ])
 
@@ -236,65 +212,51 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-    'confirm',
-    'confirmDelete',
     'isOpenModelCloseGeneral',
 ]);
 
-const getDetailSubActivity = computed(()=>{
-    return subActivitiesStore.detailResponse
-})
-
-watch(getDetailSubActivity,(newValue, oldValue)=>{
-    if(newValue){
-        nameSubActivity.value = newValue?.title
-        selectedOption.value = newValue?.priority
-    }
-})
 const checkValidty = () => {
-    const nameSubActivityValidty = nameSubActivity.value ? false : true
+    const nameValidty = nameActivity.value ? false : true
 
-    isNameSubActivityError.value = nameSubActivityValidty
+    isNameError.value = nameValidty
 
-    return nameSubActivityValidty
+    return nameValidty
 }
 
 const resetState = () =>{
-    isNameSubActivityError.value = false
+    isNameError.value = false
 }
 
 function onToggle(data) {
-    const resultValidity = checkValidty();
+    const result = checkValidty()
+    const payload = {
+        name: props.nameModal,
+        value: data
+    }
+
     if(data){
-        if(!resultValidity){
-            if(props.nameModal === 'create_form'){
+        if(!result){
+            if(selectedOption.value === 'activity_task'){
                 const payload = {
-                    "activity_id": props?.id,
-                    "title": nameSubActivity.value,
-                    "is_active": true,
-                    "priority": selectedOption.value
+                    title: nameActivity.value,
+                    type: 'activity_task'
                 }
-                subActivitiesStore.subActivitiesCreate(payload)
+                activitiesStore.activitiesCreate(payload)
             } else {
                 const payload = {
-                    "title": nameSubActivity.value,
-                    "is_active": getDetailSubActivity?.is_active,
-                    "priority": selectedOption.value,
-                    "order": getDetailSubActivity?.order
+                    title: nameActivity.value,
+                    type: 'activity_text'
                 }
-                subActivitiesStore.subActivitiesEdit(props?.idSubActivity, payload)
+                activitiesStore.activitiesCreate(payload)
             }
 
             resetState()
-            const payload = {
-                name: props.nameModal,
-                value: data
-            }
-
-            emit('isOpenModelCloseGeneral', payload)
+            emit('isOpenModelCloseGeneral', payload)   
         } else {
             errorHandle.errorMessage('Please fill required input')
         }
+    } else {
+        emit('isOpenModelCloseGeneral', payload)   
     }
 }
 

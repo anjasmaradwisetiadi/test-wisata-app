@@ -51,25 +51,37 @@
         :responseSwalError="getError"
         :responseSwalSuccess="getSuccess"
     >
-
     </LoadingAndAlert>
+    <CreateActivityModal
+        :isOpenModal="getIsOpenModalGlobal"
+        :nameModal="getNameModal" 
+        @isOpenModelCloseGeneral="isOpenModelCloseServer"
+        :responseModal="getResponseModalGlobal" 
+    >
+
+    </CreateActivityModal>
 </template>
 
 <script setup>
-import { ref, watch, computed, onMounted } from 'vue';
+import { ref, watch, watchEffect, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { utilize } from '@/utilize/index'
 import { useActivitiesStore } from '@/stores/activitiesStore';
 import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
+import CreateActivityModal from './CreateActivityModal.vue';
+import { useFormDataModalStore } from '@/stores/formDataModalStore';
+
 import Swal from 'sweetalert2';
 
 const router = useRouter();
-const activitiesStore = useActivitiesStore()
+const activitiesStore = useActivitiesStore();
+const formDataModalStore = useFormDataModalStore();
 
 const page = ref(0);
 const limit = ref(0);
 const search = ref('');
 
+// ********* get data activity
 const getLoading = computed(()=>{
     return activitiesStore.loading;
 })
@@ -89,6 +101,28 @@ const getSuccess = computed(()=>{
         return activitiesStore?.deleteResponse
     } 
 })
+
+//********** */ form modal data trigger response 
+const getIsOpenModalGlobal = computed(()=>{
+    return formDataModalStore.isOpenModalGlobal
+})
+const getNameModal = computed(()=>{
+    return formDataModalStore.nameModal
+})
+const getResponseModalGlobal = computed(()=>{
+    return formDataModalStore.responseModalGlobal
+})
+const getIdSubActivity = computed(()=>{
+    return formDataModalStore.idData;
+})
+
+watchEffect(() => 
+    getIsOpenModalGlobal, 
+    getNameModal, 
+    getResponseModalGlobal, 
+    getIdSubActivity,
+ { immediate: true })
+
 watch(getSuccess, (newValue, oldValue) => {
     if(newValue){
         activitiesStore.activitiesList(paginate())
@@ -135,11 +169,20 @@ const onDelete = (data) => {
 }
 
 const onCreateActivity = () => {
-    const payload = {
-        title: 'New Task',
-        type: 'activity_task'
+
+    const isOpenModalGlobal = true;
+    const nameModal ='create_activity';
+    const responseModalGlobal = {
+        title: 'Create Activity',
+        message: ''
     }
-    activitiesStore.activitiesCreate(payload)
+
+    const payload = {
+        'isOpenModalGlobal': isOpenModalGlobal,
+        'nameModal': nameModal,
+        'responseModalGlobal': responseModalGlobal
+    }
+    formDataModalStore.onActivatedModal(payload)
 }
 
 const onDetail = (data) =>{
@@ -152,6 +195,10 @@ const onDetail = (data) =>{
         console.log("lainnya text")
         router.push(`activity/activity-text/${data?.id}`)
     }
+}
+
+const isOpenModelCloseServer = (event) =>{
+    formDataModalStore.onDeactivatedModal()
 }
 
 
