@@ -2,7 +2,7 @@
     <div 
         id="ActivityComponent" class="flex justify-center min-h-screen ">
         <div class="relative overflow-y-auto overflow-x-hidden z-1 container">
-            <div class="flex flex-row fixed justify-between px-4 container bg-gray-50 dark:bg-gray-900 mt-24 lg:mt-24 py-3 lg:pt-10 ">
+            <div class="flex flex-row fixed justify-between px-4 container bg-gray-50 z-10 dark:bg-gray-900 mt-24 lg:mt-24 py-3 lg:pt-10 ">
                 <div>
                     <h1 class="lg:text-3xl md:text-3xl text-xl font-bold">ACTIVITY</h1>
                 </div>
@@ -22,25 +22,37 @@
                     class="w-2/4 lg:w-1/4 py-2 lg:py-4 px-2 lg:px-4 "
 
                 >
-                    <div class="border border-solid border-gray-200 shadow-lg rounded-md px-4 py-6">
+                    <div class="flex relative flex-col border border-solid border-gray-200 shadow-lg rounded-md px-4 py-2 lg:py-6 max-h-[14rem] min-h-[14rem]">
                         <div 
                             @click="onDetail(item)"
-                            class="h-[12rem] text-2xl font-semibold cursor-pointer">
+                            class="flex w-full lg:text-2xl font-semibold cursor-pointer text-lg overflow-text h-[3rem]">
                             {{ item?.title }}
                         </div>
-                        <div class="flex justify-between align-center text-gray-500">
-                            <div class="flex items-center align-center text-xl">
-                                {{ convertDate(item?.created_at) }}
-                            </div>
-                            <div class="flex items-center align-center">
-                                <span 
-                                    class="material-icons-outlined text-gray-500 cursor-pointer text-3xl" style="line-height: 1rem;" 
-                                    @click="onDelete(item)"
-                                >
-                                    delete
+                        <div class="flex justify-center items-center h-[9rem] w-full ">
+                            <template v-if="item?.type === 'activity_task'" >
+                                <span class="material-icons-outlined mr-4 text-5xl text-gray-300">
+                                    checklist
                                 </span>
-                            </div>
+                            </template>
+                            <template v-if="item?.type === 'activity_text'">
+                                <span class="material-icons-outlined mr-4 text-5xl text-gray-300">
+                                    edit_note
+                                </span>
+                            </template>
                         </div>
+                        <div class="flex absolute justify-between relative align-center text-gray-500 bottom-0">
+                                <div class="flex items-center align-center lg:text-xl md:text-xl text-sm">
+                                    {{ convertDate(item?.created_at) }}
+                                </div>
+                                <div class="flex items-center align-center">
+                                    <span 
+                                        class="material-icons-outlined text-gray-500 cursor-pointer text-3xl" style="line-height: 1rem;" 
+                                        @click="onDelete(item)"
+                                    >
+                                        delete
+                                    </span>
+                                </div>
+                            </div>
                     </div>
                 </div>
                 <div class="flex w-full justify-start shadow-lg px-2">

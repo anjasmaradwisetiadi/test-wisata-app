@@ -67,7 +67,7 @@
                                         </template>
                                         <template v-if="selectedOption === 'activity_text'">
                                             <span class="material-icons-outlined mr-4">
-                                                checklist
+                                                edit_note
                                             </span>
                                             <span>
                                                 Activity Text
