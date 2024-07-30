@@ -13,14 +13,12 @@
 <script setup>
 import { ref, watch, onMounted, onBeforeMount } from 'vue';
 import Loading from '../../components/LoadingAndAlert.vue'
-import {useDashboardStore} from '../../stores/dashboard';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
 const nameRoutePath = ref('');
 
-const dashboardStore = useDashboardStore();
 watch(() => router.currentRoute.value, fetchData, { immediate: true })
 
 onMounted(()=>{

@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
 
-const authStore = useAuthStore; 
 
 const router = createRouter({
   history: createWebHistory(),
@@ -10,11 +9,6 @@ const router = createRouter({
       path: '/',
       redirect:'/activity'
     },
-    // {
-    //   path: '/dashboard',
-    //   name: 'dashboard',
-    //   component: () => import('../views/dashboard/Dashboard.vue')
-    // },
     {
       path: '/login',
       name: 'login',

@@ -43,6 +43,30 @@
                         </div>
                     </div>
                 </div>
+                <div class="flex w-full justify-start shadow-lg px-2">
+                    <div class="flex border items-center border-solid border-gray-300 w-full px-4 py-3 my-8">
+                        <button 
+                            class="mr-2 cursor-pointer bg-sky-400 hover:bg-sky-600 rounded-lg px-3 py-1 border border-gray-500 disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed" 
+                            @click="prevPage()"
+                            :disabled=" page <= 1 ?'' : disabled "
+                        >
+                            <span class="material-icons-outlined md:text-xl lg:text-xl text-lg">
+                                arrow_back_ios
+                            </span>
+                        </button>
+                        <button class="mr-5 cursor-pointer bg-sky-400 hover:bg-sky-600 rounded-lg px-3 py-1 border border-gray-500 disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed" 
+                            @click="nextPage()"
+                            :disabled="page < getActivities?.paging?.total_page ?  disabled : '' "
+                        >
+                            <span class="material-icons-outlined md:text-xl lg:text-xl text-lg ">
+                                arrow_forward_ios
+                            </span>
+                        </button>
+                        <div>
+                            {{ getActivities?.paging?.current_page > 1 ? (getActivities?.paging?.current_page - 1) * 8 : 1 }} - {{ (getActivities?.paging?.current_page * 8) > getActivities?.paging?.count ? getActivities?.paging?.count : (getActivities?.paging?.current_page * 8) }} of {{ getActivities?.paging?.count }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -194,6 +218,16 @@ const onDetail = (data) =>{
 
 const isOpenModelCloseServer = (event) =>{
     formDataModalStore.onDeactivatedModal()
+}
+
+const nextPage = () => {
+    page.value = page.value+1
+    activitiesStore.activitiesList(paginate(page.value, 8, ''))
+}
+
+const prevPage = () =>{
+    page.value = page.value-1
+    activitiesStore.activitiesList(paginate(page.value, 8, ''))
 }
 
 

@@ -29,46 +29,13 @@ export const useSubActivitiesTextStore = defineStore('subActivitiesText', {
                 this.loading = false;
             })
     },
-
-    // need delete thi data not used
-    // async subActivitiesTextCreate(payload) {
-    //     this.loading = true;
-    //         instanceAxios.get(`texts?activity_id=${payload.activity_id}`)
-    //         .then((response)=>{
-    //             const isHaveList = response?.data?.texts?.length
-    //             if(!isHaveList){
-    //                 instanceAxios.post('text', payload)
-    //                 .then((response)=>{
-    //                     if(response?.data?.message?.toLowerCase() === 'success'){
-    //                         const payloadCreate = {
-    //                             status: true,
-    //                             message: 'create'
-    //                         }
-    //                         this.createResponse = payloadCreate
-    //                     }
-    //                     this.loading = false;
-    //                 })
-    //                 .catch((error)=>{
-    //                     this.errorResponse = true
-    //                     this.loading = false;
-    //                 })
-    //             }
-    //             this.loading = false;
-    //             this.resetState()
-    //         })
-    //         .catch((error)=>{
-    //             this.errorResponse = true
-    //             this.loading = false;
-    //         })
-    // },
-
     async subActivitiesTextEdit(id, payload) {
         this.loading = true;
         await instanceAxios.patch(`text/${id}`, payload)
             .then((response)=>{
                 const payloadUpdate = {
                     status: true,
-                    message: 'edit'
+                    message: 'update'
                 }
                 this.updateResponse = payloadUpdate
                 this.loading = false;
@@ -77,20 +44,6 @@ export const useSubActivitiesTextStore = defineStore('subActivitiesText', {
                 this.loading = false;
             })
     },
-
-//     async subActivitiesTextDelete(id) {
-//         this.loading = true;
-//         await instanceAxios.delete(`text/${id}`)
-//             .then((response)=>{
-// 
-//                 this.loading = false;
-//             })
-//             .catch((error)=>{
-//                 this.errorResponse = true;
-//                 this.loading = false;
-//             })
-//     },
-
 
 
     async resetState() {

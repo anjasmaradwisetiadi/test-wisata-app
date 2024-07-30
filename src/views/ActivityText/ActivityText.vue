@@ -97,9 +97,17 @@
     </div>
     <!-- ******* display loading, success ,error, activity  -->
     <LoadingAndAlert
-        :loading="getLoadingActivity || getLoadingSubActivityText"
+        :loading="getLoadingActivity"
         :responseSwalError="getErrorActivity"
         :responseSwalSuccess="getSuccessActivity"
+    >
+    </LoadingAndAlert>
+
+    <!-- ******* display loading, success ,error, sub-activity  -->
+    <LoadingAndAlert
+        :loading="getLoadingSubActivityText"
+        :responseSwalError="getErrorActivityText"
+        :responseSwalSuccess="getSuccessActivityText"
     >
     </LoadingAndAlert>
 </template>
@@ -136,6 +144,10 @@ const getErrorActivity = computed(()=>{
     return activitiesStore.errorResponse;
 })
 
+const getErrorActivityText = computed(()=>{
+    return subActivitiesTextStore.errorResponse;
+})
+
 const getDetailResponseActivity = computed(()=>{
     if(activitiesStore.detailResponse && createResponse){
         getSubActivityText(activitiesStore?.detailResponse?.id)
@@ -147,6 +159,13 @@ const getSuccessActivity = computed(()=>{
     if(activitiesStore?.updateResponse?.message === 'update'){
         getActivityParent();
         return activitiesStore?.updateResponse
+    } 
+})
+
+const getSuccessActivityText = computed(()=>{
+    if(subActivitiesTextStore?.updateResponse?.message === 'update'){
+        getActivityParent();
+        return subActivitiesTextStore?.updateResponse
     } 
 })
 
@@ -209,7 +228,7 @@ const onUpdateActivity = (data) =>{
 function onEdit(){
     isEdit.value = !isEdit.value
     if(!isEdit.value){
-        const idText =  valueSaveActivityDetail.value ? valueSaveActivityDetail.value.activity_id : ''
+        const idText =  valueSaveActivityDetail.value ? valueSaveActivityDetail.value.id : ''
         const payload = {
             text : note.value
         }
