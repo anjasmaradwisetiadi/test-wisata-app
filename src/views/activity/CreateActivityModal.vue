@@ -256,6 +256,7 @@ function onToggle(data) {
             errorHandle.errorMessage('Please fill required input')
         }
     } else {
+        resetState()
         emit('isOpenModelCloseGeneral', payload)   
     }
 }
