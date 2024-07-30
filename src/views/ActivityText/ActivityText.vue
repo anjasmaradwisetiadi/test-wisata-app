@@ -123,6 +123,7 @@ const note = ref(textDefault);
 const isActivityEdit = ref(false);
 const activityName = ref('');
 const idActivity = ref('');
+const valueSaveActivityDetail = ref(null);
 // const idActivityText = ref('');
 const isEdit = ref(false)
 
@@ -162,11 +163,6 @@ const createResponse = computed( ()=>{
     return subActivitiesTextStore?.createResponse;
 })
 
-//****** */ it need checking for close
-const getSubActivitiesText = computed(()=>{
-    return subActivitiesTextStore?.subActivitiesText;
-})
-
 onMounted(()=>{
     // ******** trigger data get activity detail
     getActivityParent();
@@ -174,7 +170,7 @@ onMounted(()=>{
 
 watchEffect(() => getSuccessActivity, { immediate: true })
 watchEffect(createResponse, { immediate: true })
-watchEffect(getSubActivitiesText, { immediate: true })
+// watchEffect(getSubActivitiesText, { immediate: true })
 
 const getActivityParent = () =>{
     const payloadSlug = router.currentRoute.value.params.id;
@@ -186,7 +182,8 @@ const getActivityParent = () =>{
 
 watch(getDetailResponseSubActivityText, (newValue, oldValue)=>{
     if(newValue){
-        note.value = newValue?.texts?.length ? newValue?.texts[0]?.text : `<p class="default-text">Fill your note ....</p>`;
+        note.value = newValue?.texts?.length ? newValue?.texts[0]?.text : `<p class="default-text">Fill your note shahsi....</p>`;
+        valueSaveActivityDetail.value = newValue?.texts[0]
         return newValue
     }
 })
@@ -211,10 +208,12 @@ const onUpdateActivity = (data) =>{
 
 function onEdit(){
     isEdit.value = !isEdit.value
-    if(isEdit.value){
-        console.log("edit activity text")
-    } else {
-        console.log("submit activity text")
+    if(!isEdit.value){
+        const idText =  valueSaveActivityDetail.value ? valueSaveActivityDetail.value.activity_id : ''
+        const payload = {
+            text : note.value
+        }
+        subActivitiesTextStore.subActivitiesTextEdit(idText, payload)
     }
 }
 
